@@ -1,6 +1,11 @@
 (function () {
-  const API_BASE_URL = window.NKS_API_BASE_URL || "http://localhost:8000/api";
-  const USE_MOCK = true;
+  const API_BASE_URL = (
+    window.NKS_API_BASE_URL ||
+    (window.NKS_LLM_CONFIG && window.NKS_LLM_CONFIG.backendBaseURL) ||
+    "http://127.0.0.1:8000/api/v1"
+  ).replace(/\/$/, "");
+  // 主链路以后端 P0 合约为准；只有显式设置 window.NKS_USE_MOCK_API = true 时才走本地 mock。
+  const USE_MOCK = window.NKS_USE_MOCK_API === true;
   const ENDPOINTS = {
     authLogin: "/auth/login",
     enterpriseSpaces: "/enterprise-spaces",
@@ -10,19 +15,19 @@
     enterpriseLibraryUpload: "/libraries/enterprise/upload",
     departmentLibraryUpload: "/libraries/department/upload",
     libraries: "/libraries",
-    demandUpload: "/demands/upload",
-    demandRouting: "/demands/routing",
+    demandUpload: "/materials",
+    demandRouting: "/demand-recognitions",
     skeletonGenerate: "/agent-skeletons/generate",
     skeletonConfirm: "/agent-skeletons/confirm",
     agentEmployeeGenerate: "/agent-employees/generate",
     agentEmployees: "/agent-employees",
     agentRuns: "/agent-runs",
     agentRunDetail: "/agent-runs/:runId",
-    feedback: "/feedback",
+    feedback: "/feedback-sessions",
     versionGenerateV2: "/versions/generate-v2",
     versionSave: "/versions/save",
-    memoryWriteBack: "/memory/write-back",
-    exports: "/exports"
+    memoryWriteBack: "/memory-rules",
+    exports: "/agent-runs/:runId/exports/excel"
   };
 
   function clone(value) {
@@ -199,7 +204,10 @@
       const option = currentData().export_options.find((item) => item.type === type) || currentData().export_options[0];
       return mockResponse({ exported: true, type: option.type, label: option.label, url: `./exports/${option.type}-demo` }, 280);
     }
-    return request(ENDPOINTS.exports, { method: "POST", body: JSON.stringify(payload || {}) });
+    const runId = (payload && payload.run_id) || (window.NKS.getState().taskV1 && window.NKS.getState().taskV1.run_id) || "run_size_001";
+    const type = (payload && payload.type) || "standard_size_table";
+    const path = ENDPOINTS.exports.replace(":runId", encodeURIComponent(runId)) + "?type=" + encodeURIComponent(type);
+    return request(path, { method: "GET" });
   }
 
   window.NKS_API = {
