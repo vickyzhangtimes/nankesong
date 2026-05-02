@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>岗位 Agent 工厂 · AI 员工诞生确认</title>
   <link rel="stylesheet" href="./assets/tokens.css" />
+  <link rel="stylesheet" href="./assets/shell.css" />
   <style>
     /* ── 出生遮罩 ── */
     .birth-overlay {
@@ -54,7 +55,7 @@
     .birth-steps div.active { color: var(--primary-ink); background: var(--primary-soft); border-color: #cfe0ff; transform: translateY(-2px); }
 
     /* ── 页面壳 ── */
-    .bc-app { min-height: 100vh; display: block; padding-bottom: 136px; }
+    .bc-app { min-height: 100vh; display: block; padding-bottom: 24px; }
     body.birthing .bc-app { opacity: 1; transform: none; pointer-events: auto; }
     body.birth-ready .bc-app { animation: none; opacity: 1; transform: none; }
 
@@ -72,7 +73,7 @@
     /* ── 双栏布局 ── */
     .proof-layout {
       display: grid;
-      grid-template-columns: minmax(320px, 360px) minmax(0, 1fr);
+      grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
       gap: var(--sp-3); align-items: stretch;
     }
 
@@ -177,7 +178,9 @@
     .task-hero-head b { color: var(--ink); font-size: 22px; font-weight: 700; }
     .task-list-primary {
       margin: 0; padding: 0; list-style: none;
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: 10px;
     }
     .task-list-primary li {
       position: relative; min-height: 52px;
@@ -194,7 +197,11 @@
       background: var(--role-main, var(--primary));
       box-shadow: 0 0 0 4px color-mix(in srgb, var(--role-main, var(--primary)), white 82%);
     }
-    .module-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: 12px;
+    }
     .module { min-height: 160px; padding: var(--sp-3); border-radius: 18px; background: #fff; border: 1px solid var(--line); }
     .module h3 { margin: 0 0 12px; display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 15px; }
     .module-icon {
@@ -216,13 +223,16 @@
 
     /* ── 底部操作栏 ── */
     .bc-bottombar {
-      position: sticky; bottom: 64px; z-index: 15;
+      width: min(1280px, calc(100% - 48px));
+      margin: 0 auto 24px;
       min-height: 66px; display: flex; align-items: center;
       justify-content: space-between; gap: var(--sp-3);
-      padding: 0 var(--sp-4);
-      border-top: 1px solid var(--line);
-      background: rgba(255,255,255,.92);
+      padding: 12px 32px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
       backdrop-filter: blur(16px);
+      box-shadow: 0 18px 46px rgba(28,55,103,.09);
     }
     .bc-bottombar span { color: var(--muted); font-size: var(--fs-sm); }
     .bottom-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
@@ -237,6 +247,37 @@
       .proof-layout{grid-template-columns:1fr}
       .module-grid{grid-template-columns:1fr}
       .task-list-primary{grid-template-columns:1fr}
+    }
+
+    @media(max-width:720px) {
+      .bc-app { padding-bottom: 12px; }
+      .bc-main { padding: 22px 12px 0; gap: 14px; }
+      .proof-layout { gap: 12px; }
+      .employee-card, .proof-card { border-radius: 18px; }
+      .employee-head { padding: 14px 14px 0; gap: 8px; }
+      .employee-name { font-size: 23px; }
+      .status-pill { min-height: 25px; padding: 0 8px; font-size: 11px; }
+      .image-stage { min-height: 190px; padding: 0 8px; }
+      .employee-img { width: min(190px, 74%); max-height: 220px; }
+      .org-grid { margin: 0 12px 12px; border-radius: 14px; }
+      .org-cell { min-height: 48px; padding: 8px 10px; }
+      .hero-copy, .task-hero, .module { padding: 14px; border-radius: 14px; }
+      .bc-bottombar {
+        width: calc(100% - 24px);
+        margin-bottom: 12px;
+        min-height: 0;
+        display: grid;
+        gap: 10px;
+        padding: 10px 12px 12px;
+      }
+      .bc-bottombar span { font-size: 12px; line-height: 1.5; }
+      .bottom-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .bottom-actions .nks-btn { width: 100%; min-width: 0; height: 44px; padding: 0 10px; font-size: 13px; }
+      .bottom-actions .nks-btn.primary { grid-column: 1 / -1; font-size: 14px; }
     }
   </style>
 </head>
