@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>认知与空间 · 创建企业空间 · Agentry 企捏捏</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <style>
+    body { background: var(--bg); }
+
+    /* 步骤导航视觉沿用 tokens.css 的 .nks-stepnav */
+    .qa-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-3);
+    }
+    .qa-grid .qa-block.full { grid-column: span 2; }
+    .qa-block .label {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--ink); font-weight: 600; font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .qa-block .label .n {
+      width: 22px; height: 22px; border-radius: 999px;
+      background: var(--primary-soft); color: var(--primary-ink);
+      text-align: center; line-height: 22px; font-size: 12px; font-weight: 700;
+    }
+    .qa-block .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+    .extract h2 {
+      font-size: 16px; margin-bottom: var(--sp-2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .extract h2 .pulse {
+      width: 8px; height: 8px; border-radius: 999px; background: var(--success);
+      box-shadow: 0 0 0 4px rgba(34,183,122,.15);
+    }
+    .extract .row {
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .extract .row:last-child { border-bottom: none; }
+    .extract .row .k { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+    .extract .row .v { color: var(--ink); font-size: 13px; line-height: 1.6; word-break: break-all; }
+    .extract .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 2px 8px;
+      background: var(--primary-soft); color: var(--primary-ink);
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+    }
+
+    /* 逐项淡入 */
+    .nks-fade-up {
+      opacity: 0; transform: translateY(8px);
+      animation: nks-fade-up .42s ease forwards;
+    }
+    .nks-fade-up.delay-1 { animation-delay: .08s; }
+    .nks-fade-up.delay-2 { animation-delay: .16s; }
+    .nks-fade-up.delay-3 { animation-delay: .24s; }
+    .nks-fade-up.delay-4 { animation-delay: .32s; }
+    .nks-fade-up.delay-5 { animation-delay: .40s; }
+    .nks-fade-up.delay-6 { animation-delay: .48s; }
+    @keyframes nks-fade-up {
+      to { opacity: 1; transform: none; }
+    }
+
+    /* memory pill 全场显眼 */
+    .mem-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      background: var(--success); color: #fff;
+      border-radius: var(--radius-pill);
+      font-size: 12px; font-weight: 600;
+      margin-bottom: var(--sp-2);
+    }
+  </style>
+</head>
+<body>
+  <div class="nks-shell">
+    <main class="nks-main">
+
+      <!-- 左：步骤导航 -->
+      <aside class="nks-card" style="padding:16px;">
+        <div class="nks-stepnav">
+          <div class="item active">
+            <span class="n">1</span>
+            <div>
+              <div class="title">认知与空间</div>
+              <div class="sub">理解产品，创建企业空间</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">2</span>
+            <div>
+              <div class="title">企业记忆</div>
+              <div class="sub">企业库 / 部门库</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">3</span>
+            <div>
+              <div class="title">路由与骨架</div>
+              <div class="sub">判断岗位 + 七层骨架</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">4</span>
+            <div>
+              <div class="title">执行与迭代</div>
+              <div class="sub">生成员工 + V1 输出</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 中：6 问 Q&A 主卡 -->
+      <section>
+        <div class="nks-card">
+          <span class="mem-pill">✓ 已读取 6 条企业记忆</span>
+          <h1 style="font-size:24px;margin-bottom:6px;">让我们先了解您的企业</h1>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:var(--sp-3);">
+            回答 6 个简短问题，系统将自动生成 <b style="color:var(--ink);">企业身份证</b>，
+            为后续岗位 Agent 判断、记忆调用、红线约束提供基础。
+          </p>
+
+          <div class="qa-grid" id="qa-grid"><!-- JS 注入 --></div>
+
+          <div style="margin-top: var(--sp-4); display: flex; gap: var(--sp-2); align-items: center;">
+            <button id="btn-confirm" class="nks-btn primary lg" style="flex:1;">
+              + 确认生成企业身份证
+            </button>
+            <button id="btn-reset" class="nks-btn">恢复示例</button>
+          </div>
+          <p style="margin-top:8px;color:var(--muted);font-size:12px;">
+            示例数据已自动从 <b id="cur-company">—</b> 演示企业预填。可直接修改后提交。
+          </p>
+        </div>
+      </section>
+
+      <!-- 右：系统已提取 -->
+      <aside>
+        <div class="nks-card extract" id="extract-card">
+          <h2><span class="pulse"></span>系统已提取</h2>
+          <div id="extract-body"><!-- JS 注入，逐项淡入 --></div>
+        </div>
+      </aside>
+
+    </main>
+  </div>
+
+  <script src="./assets/mock-data.js"></script>
+  <script src="./assets/state.js"></script>
+  <script>
+    NKS.mountTopbar({ user: '张小北' });
+    NKS.mountTimeline(0);
+
+    (function () {
+      const data = NKS.getCompanyData();
+      const id = data.enterprise_identity;
+      const company = NKS.getCompany();
+      const labelMap = { hongke: '虹科', longxia: '林蔷' };
+      document.getElementById('cur-company').textContent = labelMap[company] || company;
+
+      // 6 个问题，预填示例数据
+      const QA = [
+        { n: 1, label: '企业名称', field: 'enterprise_name', type: 'input', full: false,
+          hint: '会出现在所有 AI 员工的身份卡里。' },
+        { n: 2, label: '官方网站', field: 'website', type: 'input', full: false,
+          hint: '可填"暂无"。用于品牌语气抓取。' },
+        { n: 3, label: '所属行业', field: 'industry', type: 'input', full: true,
+          hint: '行业越具体，岗位骨架越准。' },
+        { n: 4, label: '主要客户', field: 'main_customers', type: 'list', full: true,
+          hint: '可换行多写几条。' },
+        { n: 5, label: '业务目标', field: 'business_goals', type: 'list', full: true,
+          hint: '驱动 AI 员工 KPI 的核心来源。' },
+        { n: 6, label: '风险红线', field: 'risk_rules', type: 'list', full: true,
+          hint: '强约束，违反任何一条 AI 员工都不会执行。' },
+      ];
+
+      function valueToText(v) {
+        if (Array.isArray(v)) return v.join('\n');
+        return String(v == null ? '' : v);
+      }
+
+      // 渲染表单
+      const grid = document.getElementById('qa-grid');
+      grid.innerHTML = QA.map((q, i) => {
+        const initial = valueToText(id[q.field]);
+        const isList = q.type === 'list';
+        const ctrl = isList
+          ? `<textarea class="nks-textarea" data-field="${q.field}" rows="3" placeholder="一行一条">${initial}</textarea>`
+          : `<input class="nks-input" data-field="${q.field}" value="${initial.replace(/"/g,'&quot;')}" />`;
+        return `
+          <div class="qa-block ${q.full ? 'full' : ''} nks-fade-up delay-${i + 1}">
+            <div class="label"><span class="n">${q.n}</span>${q.label}</div>
+            ${ctrl}
+            <div class="hint">${q.hint}</div>
+          </div>
+        `;
+      }).join('');
+
+      // —— 实时同步右侧"系统已提取" ——
+      function readForm() {
+        const out = {};
+        QA.forEach(q => {
+          const el = document.querySelector(`[data-field="${q.field}"]`);
+          if (!el) return;
+          if (q.type === 'list') {
+            out[q.field] = el.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+          } else {
+            out[q.field] = el.value.trim();
+          }
+        });
+        return out;
+      }
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function renderExtract(formObj, animate) {
+        const body = document.getElementById('extract-body');
+        const rows = QA.map((q, i) => {
+          const v = formObj[q.field];
+          let valHTML = '';
+          if (Array.isArray(v)) {
+            valHTML = v.length
+              ? v.map(item => `<span class="chip">${escapeHtml(item)}</span>`).join('')
+              : '<span style="color:var(--muted);">—</span>';
+          } else {
+            valHTML = `<span>${escapeHtml(v) || '<span style=\"color:var(--muted);\">—</span>'}</span>`;
+          }
+          const cls = animate ? `nks-fade-up delay-${(i % 6) + 1}` : '';
+          return `
+            <div class="row ${cls}">
+              <div class="k">${q.label}</div>
+              <div class="v">${valHTML}</div>
+            </div>
+          `;
+        }).join('');
+        body.innerHTML = rows;
+      }
+
+      // 初次渲染（带动画）
+      renderExtract(readForm(), true);
+
+      // 监听表单变更（无动画，避免反复闪）
+      grid.addEventListener('input', () => renderExtract(readForm(), false));
+
+      // 恢复示例
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        QA.forEach(q => {
+          const el = document.querySelector(`[data-field="${q.field}"]`);
+          if (!el) return;
+          el.value = valueToText(id[q.field]);
+        });
+        renderExtract(readForm(), true);
+      });
+
+      // 主按钮：写入 state，跳转下一步
+      document.getElementById('btn-confirm').addEventListener('click', () => {
+        const next = readForm();
+        // 校验：6 项不能全空
+        const empties = Object.values(next).filter(v => Array.isArray(v) ? v.length === 0 : !v).length;
+        if (empties >= 4) {
+          alert('请至少填写一半以上的内容，再提交。');
+          return;
+        }
+        NKS.setState({
+          enterprise: next,
+          onboarding_done_at: new Date().toISOString(),
+        });
+        // 跳到下一步：企业记忆（同学 C 的下一页）
+        location.href = './enterprise-memory.html';
+      });
+    })();
+  </script>
+</body>
+</html>

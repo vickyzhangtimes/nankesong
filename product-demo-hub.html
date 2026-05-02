@@ -1,0 +1,461 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentry · 企捏捏</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <style>
+    .home {
+      max-width: 1080px;
+      margin: var(--sp-4) auto var(--sp-5);
+      padding: 0 var(--sp-4);
+      display: grid;
+      gap: var(--sp-4);
+    }
+
+    /* 问候区 */
+    .greet h1 {
+      font-size: 32px;
+      letter-spacing: -0.01em;
+    }
+    .greet .sub {
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: 15px;
+    }
+    .greet .sub b {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* 待办召唤卡 — 唯一主行动 */
+    .summon {
+      background:
+        radial-gradient(circle at 95% 0%, rgba(47,109,246,.10), transparent 55%),
+        var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: var(--sp-4);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--sp-4);
+      align-items: center;
+    }
+    .summon .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px;
+      background: var(--primary-soft);
+      color: var(--primary-ink);
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      margin-bottom: var(--sp-2);
+    }
+    .summon h2 {
+      font-size: 22px;
+      line-height: 1.4;
+      margin-bottom: var(--sp-2);
+    }
+    .summon .quote {
+      background: var(--surface-2);
+      border-left: 3px solid var(--primary);
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .summon .meta {
+      margin-top: var(--sp-2);
+      color: var(--muted);
+      font-size: var(--fs-sm);
+    }
+    .summon .meta b { color: var(--ink); }
+
+    /* 已雇佣员工 */
+    .roster-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .roster-head h3 { font-size: 18px; }
+    .roster-head .more { color: var(--muted); font-size: var(--fs-sm); }
+    .roster-head .more a { color: var(--primary); font-weight: 600; }
+
+    .roster {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-3);
+    }
+    .emp {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-3);
+      display: grid;
+      gap: 8px;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      color: var(--text);
+    }
+    .emp:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: var(--primary);
+    }
+    .emp .top {
+      display: flex; align-items: center; gap: var(--sp-2);
+    }
+    .emp .avatar {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-soft), #DCE8FF);
+      color: var(--primary-ink);
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 18px;
+    }
+    .emp .who { display: grid; gap: 2px; }
+    .emp .who .name { color: var(--ink); font-weight: 700; font-size: 15px; }
+    .emp .who .title { color: var(--muted); font-size: var(--fs-sm); }
+    .emp .stats {
+      display: flex; gap: var(--sp-3);
+      padding-top: var(--sp-2);
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: var(--fs-xs);
+    }
+    .emp .stats b { color: var(--ink); font-size: 14px; font-weight: 700; margin-right: 4px; }
+
+    @media (max-width: 880px) {
+      .summon { grid-template-columns: 1fr; }
+      .roster { grid-template-columns: 1fr; }
+    }
+
+    /* —— 诊断 Modal —— */
+    .nks-modal-mask {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(11,23,51,.55);
+      backdrop-filter: blur(6px);
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 48px 16px;
+      overflow-y: auto;
+    }
+    .nks-modal-mask.show { display: flex; }
+    .nks-modal {
+      width: min(880px, 100%);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: var(--sp-4);
+      animation: nks-modal-in .25s ease-out;
+    }
+    @keyframes nks-modal-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+    .nks-modal h2 { font-size: 22px; margin-bottom: 4px; }
+    .nks-modal .src { color: var(--muted); font-size: 13px; margin-bottom: var(--sp-3); }
+    .nks-modal .src b { color: var(--primary); }
+
+    .nks-loading {
+      display: flex; align-items: center; gap: 10px;
+      padding: var(--sp-3); color: var(--muted); font-size: 14px;
+    }
+    .nks-spinner {
+      width: 18px; height: 18px; border-radius: 999px;
+      border: 2px solid var(--primary-soft);
+      border-top-color: var(--primary);
+      animation: nks-spin 0.8s linear infinite;
+    }
+    @keyframes nks-spin { to { transform: rotate(360deg); } }
+
+    .route-card {
+      background: var(--primary-soft);
+      border: 1px solid #C7DCFF;
+      border-radius: var(--radius);
+      padding: var(--sp-3);
+      margin-bottom: var(--sp-3);
+    }
+    .route-card .lab { font-size: 12px; color: var(--primary-ink); font-weight: 700; letter-spacing: .04em; }
+    .route-card h3 { color: var(--primary-ink); font-size: 18px; margin: 4px 0 6px; }
+    .route-card .reason { color: var(--text); font-size: 13px; }
+
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-2);
+      margin-bottom: var(--sp-3);
+    }
+    .metric {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+    }
+    .metric .name { color: var(--muted); font-size: 12px; }
+    .metric .vals { color: var(--ink); font-size: 13px; margin-top: 4px; }
+    .metric .vals em { color: var(--primary); font-style: normal; font-weight: 700; }
+
+    .skeleton-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-2);
+      margin-bottom: var(--sp-3);
+    }
+    .skeleton-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--surface);
+    }
+    .skeleton-card.last-span { grid-column: span 2; }
+    .skeleton-card .idx {
+      display: inline-block;
+      width: 22px; height: 22px; border-radius: 999px;
+      background: var(--primary-soft); color: var(--primary-ink);
+      text-align: center; line-height: 22px; font-size: 12px; font-weight: 700;
+      margin-right: 6px;
+    }
+    .skeleton-card .title { display: inline; color: var(--ink); font-weight: 700; font-size: 14px; }
+    .skeleton-card ul { margin: 8px 0 0; padding-left: 18px; color: var(--text); font-size: 13px; line-height: 1.7; }
+    .skeleton-card.red-line { border-color: #FFB6B6; background: #FFF6F6; }
+    .skeleton-card.red-line .idx { background: #FFE0E0; color: var(--danger); }
+
+    .modal-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: var(--sp-2);
+      border-top: 1px solid var(--line);
+      gap: var(--sp-2);
+    }
+    .modal-foot .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      background: var(--success); color: #fff;
+      border-radius: var(--radius-pill);
+      font-size: 12px; font-weight: 600;
+    }
+    .err-card {
+      border: 1px solid #FFB6B6; background: #FFF6F6;
+      color: var(--danger);
+      border-radius: var(--radius);
+      padding: var(--sp-3);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="home">
+
+    <!-- 1. 问候 -->
+    <section class="greet">
+      <h1 id="greet-title">下午好，张小北</h1>
+      <p class="sub">
+        你的 AI 员工今天替你完成了 <b id="done-count">—</b> 件事 ·
+        当前公司 <b id="company-name">—</b>
+      </p>
+    </section>
+
+    <!-- 2. 召唤卡（唯一主入口） -->
+    <section class="summon">
+      <div>
+        <div class="badge">
+          <span style="width:6px;height:6px;border-radius:999px;background:var(--primary);"></span>
+          一条来自你昨天会议的待处理事项
+        </div>
+        <h2 id="demand-title">—</h2>
+        <div class="quote" id="demand-excerpt">—</div>
+        <div class="meta">
+          来源：<b>当前任务资料 · AI 岗位交流会议-逐字稿.docx</b> · 还没人接
+        </div>
+      </div>
+      <div>
+        <button id="btn-summon" class="nks-btn primary lg" style="white-space:nowrap;border:none;cursor:pointer;">
+          让 AI 替我处理 →
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. 已雇佣员工 -->
+    <section>
+      <div class="roster-head">
+        <h3>你已经雇佣的 AI 员工</h3>
+        <div class="more">
+          共 <b id="emp-count">—</b> 位 ·
+          <a href="./ai-employee-roster.html">查看全部 →</a>
+        </div>
+      </div>
+      <div class="roster" id="roster"></div>
+    </section>
+
+  </div>
+
+  <!-- 诊断 Modal -->
+  <div class="nks-modal-mask" id="diag-mask">
+    <div class="nks-modal" id="diag-modal" role="dialog" aria-labelledby="diag-title">
+      <h2 id="diag-title">AI 正在为你诊断需求</h2>
+      <div class="src">来源：<b id="diag-source">—</b> · 模型：<b>StepFun</b></div>
+      <div id="diag-body">
+        <div class="nks-loading">
+          <div class="nks-spinner"></div>
+          <span>读取企业身份证 · 路由判断 · 生成七层骨架（约 10 ~ 20 秒）…</span>
+        </div>
+      </div>
+      <div class="modal-foot" style="margin-top: var(--sp-3);">
+        <span class="pill" id="diag-mem-pill" style="visibility:hidden;">✓ 已读取 6 条企业记忆</span>
+        <div style="display:flex;gap:8px;">
+          <button class="nks-btn" id="diag-close">关闭</button>
+          <a class="nks-btn primary" id="diag-continue" href="./demand-diagnosis.html" style="display:none;">进入正式诊断页 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./assets/llm-config.js"></script>
+  <script src="./assets/mock-data.js"></script>
+  <script src="./assets/state.js"></script>
+  <script src="./assets/llm.js"></script>
+  <script>
+    NKS.mountTopbar({ user: '张小北' });
+    // home 不挂 timeline（不属于主链路 6 步）
+
+    (function () {
+      const data = NKS.getCompanyData();
+      const id = data.enterprise_identity;
+
+      // 时段问候
+      const h = new Date().getHours();
+      const greet = h < 6 ? '凌晨好' : h < 11 ? '早上好' : h < 13 ? '中午好' : h < 18 ? '下午好' : '晚上好';
+      document.getElementById('greet-title').textContent = `${greet}，张小北`;
+
+      // 当前公司
+      document.getElementById('company-name').textContent = id.enterprise_name;
+
+      // 召唤卡内容
+      document.getElementById('demand-title').textContent = data.raw_demand.title;
+      document.getElementById('demand-excerpt').textContent = data.raw_demand.excerpt;
+
+      // 已完成数（取已上岗员工 tasks_done 之和）
+      const totalDone = data.roster.reduce((s, e) => s + (e.tasks_done || 0), 0);
+      document.getElementById('done-count').textContent = totalDone;
+      document.getElementById('emp-count').textContent = data.roster.length;
+
+      // 员工卡
+      document.getElementById('roster').innerHTML = data.roster.map(e => `
+        <a class="emp" href="./ai-employee-roster.html">
+          <div class="top">
+            <div class="avatar">${e.name.slice(-1)}</div>
+            <div class="who">
+              <div class="name">${e.name} · <span style="color:var(--muted);font-weight:500;font-size:13px;">${e.id}</span></div>
+              <div class="title">${e.title} · ${e.department}</div>
+            </div>
+          </div>
+          <div class="stats">
+            <span><b>${e.tasks_done}</b>件已完成</span>
+            <span style="color:var(--primary);">${e.status}</span>
+          </div>
+        </a>
+      `).join('');
+
+      // —— 诊断按钮：调真 LLM ——
+      const mask = document.getElementById('diag-mask');
+      const body = document.getElementById('diag-body');
+      const memPill = document.getElementById('diag-mem-pill');
+      const continueBtn = document.getElementById('diag-continue');
+      const sourceEl = document.getElementById('diag-source');
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function renderResult(d) {
+        const r = d.routing_decision || {};
+        const metrics = (d.diagnosis_metrics || []).slice(0, 4);
+        const skel = (d.seven_skeleton || []).slice(0, 7);
+
+        const decisionLabel = ({
+          reuse_agent: '复用现有 Agent',
+          add_workflow: '加挂 Workflow',
+          new_role_agent: '新建岗位 Agent',
+        })[r.decision] || r.decision || '—';
+
+        const metricsHTML = metrics.map(m => `
+          <div class="metric">
+            <div class="name">${escapeHtml(m.name)}</div>
+            <div class="vals">${escapeHtml(m.baseline)} → <em>${escapeHtml(m.target)}</em></div>
+          </div>
+        `).join('');
+
+        const skelHTML = skel.map((s, i) => {
+          const isLast = i === 6;
+          const isRed = String(s.title || '').includes('红线');
+          const items = Array.isArray(s.items) ? s.items : [String(s.content || '')];
+          return `
+            <div class="skeleton-card ${isLast ? 'last-span' : ''} ${isRed ? 'red-line' : ''}">
+              <span class="idx">${s.idx || (i + 1)}</span>
+              <span class="title">${escapeHtml(s.title)}</span>
+              <ul>${items.map(it => `<li>${escapeHtml(it)}</li>`).join('')}</ul>
+            </div>
+          `;
+        }).join('');
+
+        body.innerHTML = `
+          <div class="route-card">
+            <div class="lab">路由判断</div>
+            <h3>${escapeHtml(decisionLabel)} · ${escapeHtml(r.target_agent || '')}</h3>
+            <div class="reason">${escapeHtml(r.reason || '')}</div>
+          </div>
+          <div class="metrics-grid">${metricsHTML}</div>
+          <div class="skeleton-grid">${skelHTML}</div>
+        `;
+
+        memPill.style.visibility = 'visible';
+        continueBtn.style.display = 'inline-flex';
+      }
+
+      function renderError(msg) {
+        body.innerHTML = `
+          <div class="err-card">
+            <b>诊断失败：</b>${escapeHtml(msg)}<br>
+            <span style="color:var(--muted);">已自动回退兜底数据，路演仍可继续。Ctrl+Shift+M 可强制兜底模式。</span>
+          </div>
+        `;
+        continueBtn.style.display = 'inline-flex';
+      }
+
+      document.getElementById('btn-summon').addEventListener('click', async () => {
+        location.href = './demand-diagnosis.html';
+        return;
+
+        sourceEl.textContent = data.raw_demand.title;
+        body.innerHTML = `
+          <div class="nks-loading">
+            <div class="nks-spinner"></div>
+            <span>读取企业身份证 · 路由判断 · 生成七层骨架（约 10 ~ 20 秒）…</span>
+          </div>`;
+        memPill.style.visibility = 'hidden';
+        continueBtn.style.display = 'none';
+        mask.classList.add('show');
+
+        try {
+          const result = await NKS_LLM.diagnose({
+            company: NKS.getCompany(),
+            enterprise_identity: data.enterprise_identity,
+            existing_agents: data.roster,
+            raw_demand: data.raw_demand.excerpt || data.raw_demand.title,
+          });
+          if (!result || !result.seven_skeleton) {
+            return renderError('返回数据为空');
+          }
+          renderResult(result);
+        } catch (err) {
+          renderError(String((err && err.message) || err));
+        }
+      });
+
+      document.getElementById('diag-close').addEventListener('click', () => {
+        mask.classList.remove('show');
+      });
+      mask.addEventListener('click', (e) => {
+        if (e.target === mask) mask.classList.remove('show');
+      });
+    })();
+  </script>
+</body>
+</html>

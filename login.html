@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>登录 · Agentry 企捏捏</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <style>
+    body { background: var(--bg); }
+
+    /* —— 站点级顶栏 —— */
+    .site-nav {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 var(--sp-4);
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .site-nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); }
+    .site-nav .brand .logo {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), #5E9CFF);
+      color: #fff; display: grid; place-items: center; font-weight: 900;
+      box-shadow: 0 8px 18px rgba(47,109,246,.28);
+    }
+    .site-nav .brand .nick { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 4px; }
+    .site-nav .links { display: flex; gap: var(--sp-2); color: var(--muted); font-size: var(--fs-sm); align-items: center; }
+    .site-nav .links a { color: var(--muted); }
+    .site-nav .links a:hover { color: var(--ink); }
+
+    /* —— 主体两栏 —— */
+    .login-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px var(--sp-4) var(--sp-5);
+      display: grid;
+      grid-template-columns: 1fr 460px;
+      gap: var(--sp-5);
+      align-items: start;
+    }
+
+    /* 左：价值文案 */
+    .pitch h1 {
+      font-size: 36px; line-height: 1.2; letter-spacing: -0.01em;
+      margin-bottom: var(--sp-3);
+    }
+    .pitch h1 em { font-style: normal; color: var(--primary); }
+    .pitch .lead { color: var(--text); font-size: 15px; line-height: 1.7; max-width: 520px; }
+    .pitch .lead b { color: var(--ink); }
+
+    .pitch .perks {
+      margin-top: var(--sp-4);
+      display: grid; gap: var(--sp-2);
+    }
+    .perk {
+      display: grid; grid-template-columns: 28px 1fr; gap: var(--sp-2);
+      align-items: start;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .perk .ico {
+      width: 28px; height: 28px; border-radius: 999px;
+      background: var(--primary-soft); color: var(--primary-ink);
+      display: grid; place-items: center; font-weight: 800;
+    }
+    .perk .t { color: var(--ink); font-weight: 600; font-size: 14px; }
+    .perk .d { color: var(--muted); font-size: 13px; line-height: 1.6; margin-top: 2px; }
+
+    .trust {
+      margin-top: var(--sp-4);
+      padding-top: var(--sp-3);
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .trust b { color: var(--ink); }
+
+    /* 右：表单卡 */
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 30px 60px rgba(15, 39, 89, .10);
+      padding: var(--sp-4);
+      position: relative;
+    }
+    .login-card .head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: var(--sp-1);
+    }
+    .login-card h2 { font-size: 22px; }
+    .login-card .head .swap {
+      color: var(--muted); font-size: 13px;
+    }
+    .login-card .sub { color: var(--muted); font-size: 13px; margin-bottom: var(--sp-3); }
+
+    /* 选项卡 */
+    .tabs {
+      display: flex;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 4px;
+      margin-bottom: var(--sp-3);
+    }
+    .tabs .tab {
+      flex: 1; text-align: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .tabs .tab.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* 字段 */
+    .field { margin-bottom: var(--sp-2); }
+    .field .label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; font-weight: 600; }
+    .field .input-row {
+      display: flex; align-items: stretch; gap: var(--sp-2);
+    }
+    .field .input-row .nks-input { flex: 1; }
+
+    /* 国家区号选择 */
+    .phone-row {
+      display: grid; grid-template-columns: 96px 1fr; gap: 8px;
+    }
+    .phone-row select.nks-input {
+      padding: 12px 8px;
+      background: var(--surface-2);
+    }
+
+    /* 验证码按钮 */
+    .send-code {
+      height: auto; padding: 0 14px;
+      white-space: nowrap;
+      min-width: 110px;
+    }
+    .send-code:disabled,
+    .send-code.cooling {
+      background: var(--surface-2);
+      color: var(--muted);
+      border-color: var(--line);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* 同意条款 */
+    .agree {
+      display: flex; align-items: flex-start; gap: 8px;
+      color: var(--muted); font-size: 12px; line-height: 1.6;
+      margin: var(--sp-2) 0 var(--sp-3);
+    }
+    .agree input { margin-top: 2px; accent-color: var(--primary); }
+    .agree a { color: var(--primary); }
+
+    /* 演示账号一键登录 */
+    .demo-shortcut {
+      margin-top: var(--sp-3);
+      padding-top: var(--sp-3);
+      border-top: 1px dashed var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .demo-shortcut .nks-btn {
+      margin-top: 8px; width: 100%;
+      background: var(--primary-soft);
+      border-color: transparent;
+      color: var(--primary-ink);
+    }
+
+    /* 错误提示 */
+    .hint {
+      color: var(--danger); font-size: 12px; margin-top: 6px;
+      display: none;
+    }
+    .hint.show { display: block; }
+    .hint-ok { color: var(--success); }
+
+    /* 底部副信息 */
+    .login-card .switch {
+      text-align: center; margin-top: var(--sp-3);
+      color: var(--muted); font-size: 13px;
+    }
+    .login-card .switch a { color: var(--primary); font-weight: 600; }
+
+    /* footer */
+    footer.site-foot {
+      color: var(--muted); font-size: var(--fs-sm); text-align: center;
+      padding: var(--sp-3) 0 var(--sp-4);
+    }
+
+    @media (max-width: 920px) {
+      .login-wrap { grid-template-columns: 1fr; padding-top: 32px; }
+      .pitch h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 顶栏 -->
+  <nav class="site-nav">
+    <a class="brand" href="./index.html" style="text-decoration:none;">
+      <div class="logo">A</div>
+      <div>Agentry <span class="nick">企捏捏</span></div>
+    </a>
+    <div class="links">
+      <a href="./index.html">← 返回首页</a>
+    </div>
+  </nav>
+
+  <!-- 两栏布局 -->
+  <div class="login-wrap">
+
+    <!-- 左：价值文案，让用户继续往下点 -->
+    <section class="pitch">
+      <h1>登录后，<br/>你的第一个 <em>AI 员工</em><br/>30 秒就能上岗。</h1>
+      <p class="lead">
+        没有 prompt 工程，没有 workflow 拖拽。
+        把一段会议记录或一句吐槽丢进来，
+        <b>Agentry 自动判断岗位、生成边界、跑出 V1 交付</b>，
+        一句反馈下一版立刻进化。
+      </p>
+
+      <div class="perks">
+        <div class="perk">
+          <div class="ico">⚡</div>
+          <div>
+            <div class="t">3 分钟首个员工上岗</div>
+            <div class="d">从混乱需求到能干活的 AI 员工，比写一份 prompt 还快</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="ico">🛡</div>
+          <div>
+            <div class="t">企业级红线 / 不自动发布</div>
+            <div class="d">关键决策必须人工确认，敏感数据不离开你的空间</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="ico">🔁</div>
+          <div>
+            <div class="t">反馈写入企业记忆，全员共享</div>
+            <div class="d">你提一句"不要太营销"，整家公司的 AI 员工都遵守</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust">
+        🔒 手机号仅用于身份校验 ·
+        <b>不会发送营销短信</b> ·
+        企业数据存储在你的空间内
+      </div>
+    </section>
+
+    <!-- 右：登录表单卡 -->
+    <section class="login-card">
+      <div class="head">
+        <h2 id="form-title">手机号登录 / 注册</h2>
+        <span class="swap">未注册手机号验证后将自动创建账号</span>
+      </div>
+      <p class="sub">输入手机号获取验证码，30 秒后即可进入你的企业空间</p>
+
+      <!-- 登录方式 tab：手机为主，邮箱为次（不实现，标"即将上线"）-->
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="phone">手机验证码</div>
+        <div class="tab" data-tab="email" title="即将上线">邮箱密码 · 即将上线</div>
+      </div>
+
+      <!-- 手机表单 -->
+      <form id="phone-form" novalidate>
+        <div class="field">
+          <label class="label" for="phone">手机号</label>
+          <div class="phone-row">
+            <select class="nks-input" id="region">
+              <option value="+86" selected>🇨🇳 +86</option>
+              <option value="+852">🇭🇰 +852</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+            </select>
+            <input class="nks-input" id="phone" type="tel" inputmode="numeric"
+                   placeholder="请输入 11 位手机号" maxlength="11" autocomplete="tel-national" />
+          </div>
+          <div class="hint" id="phone-hint">请输入正确的 11 位手机号</div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="code">验证码</label>
+          <div class="input-row">
+            <input class="nks-input" id="code" type="text" inputmode="numeric"
+                   placeholder="6 位短信验证码" maxlength="6" autocomplete="one-time-code" />
+            <button type="button" class="nks-btn send-code" id="send-code">获取验证码</button>
+          </div>
+          <div class="hint" id="code-hint">验证码错误或已过期</div>
+          <div class="hint hint-ok" id="code-sent">已发送至 <b id="masked-phone"></b>（演示环境验证码：<b>123456</b>）</div>
+        </div>
+
+        <label class="agree">
+          <input type="checkbox" id="agree" checked />
+          <span>
+            我已阅读并同意
+            <a href="#">《用户协议》</a> 与
+            <a href="#">《隐私政策》</a>，
+            授权 Agentry 创建并使用我的企业空间
+          </span>
+        </label>
+
+        <button type="submit" class="nks-btn primary lg block" id="submit-btn">登录 / 注册</button>
+
+        <div class="demo-shortcut">
+          路演 / 评委来访？
+          <button type="button" class="nks-btn block" id="demo-login">用演示账号一键登录 →</button>
+        </div>
+      </form>
+
+      <div class="switch">
+        登录遇到问题？<a href="#">联系我们</a>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-foot">
+    Agentry · 企捏捏 · 几句话，捏出你的理想 AI 员工 © 2026
+  </footer>
+
+  <script>
+    // —— 工具：脱敏显示手机号 ——
+    function maskPhone(p) {
+      if (!p || p.length < 7) return p;
+      return p.slice(0, 3) + ' **** ' + p.slice(-4);
+    }
+
+    // —— 选项卡：邮箱标"即将上线"，点了不切换 ——
+    document.querySelectorAll('#tabs .tab').forEach(t => {
+      t.addEventListener('click', () => {
+        if (t.dataset.tab === 'email') {
+          alert('邮箱密码登录即将上线，路演现场请用「手机验证码」或「演示账号一键登录」');
+          return;
+        }
+      });
+    });
+
+    // —— 验证码倒计时 ——
+    const sendBtn = document.getElementById('send-code');
+    const phoneEl = document.getElementById('phone');
+    const codeSent = document.getElementById('code-sent');
+    const phoneHint = document.getElementById('phone-hint');
+    const masked = document.getElementById('masked-phone');
+
+    sendBtn.addEventListener('click', () => {
+      const v = phoneEl.value.trim();
+      // 简单校验：+86 走 11 位，其他放过
+      const region = document.getElementById('region').value;
+      const valid = region === '+86' ? /^1[3-9]\d{9}$/.test(v) : v.length >= 5;
+      if (!valid) {
+        phoneHint.classList.add('show');
+        phoneEl.focus();
+        return;
+      }
+      phoneHint.classList.remove('show');
+
+      // 显示已发送
+      masked.textContent = maskPhone(v);
+      codeSent.classList.add('show');
+
+      // 倒计时 60s
+      sendBtn.classList.add('cooling');
+      let s = 60;
+      sendBtn.textContent = `${s}s 后重发`;
+      const timer = setInterval(() => {
+        s--;
+        if (s <= 0) {
+          clearInterval(timer);
+          sendBtn.classList.remove('cooling');
+          sendBtn.textContent = '重新发送';
+        } else {
+          sendBtn.textContent = `${s}s 后重发`;
+        }
+      }, 1000);
+    });
+
+    // —— 提交登录 ——
+    document.getElementById('phone-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = document.getElementById('code').value.trim();
+      const codeHint = document.getElementById('code-hint');
+      const agree = document.getElementById('agree').checked;
+      if (!agree) {
+        alert('请先勾选同意《用户协议》与《隐私政策》');
+        return;
+      }
+      // 演示规则：只有 123456 通过
+      if (code !== '123456') {
+        codeHint.classList.add('show');
+        return;
+      }
+      codeHint.classList.remove('show');
+      // 写入登录态（演示用）
+      try {
+        localStorage.setItem('nks_user', JSON.stringify({
+          name: '张小北',
+          phone: phoneEl.value.trim(),
+          loginAt: Date.now(),
+        }));
+      } catch (e) {}
+      // 进入完整用户里程起点：企业认知与空间
+      location.href = './company-onboarding.html';
+    });
+
+    // —— 演示账号一键登录 ——
+    document.getElementById('demo-login').addEventListener('click', () => {
+      try {
+        localStorage.setItem('nks_user', JSON.stringify({
+          name: '张小北',
+          phone: '138 **** 8888',
+          loginAt: Date.now(),
+          isDemo: true,
+        }));
+      } catch (e) {}
+      location.href = './company-onboarding.html';
+    });
+  </script>
+</body>
+</html>
