@@ -151,6 +151,17 @@ NKS.mountTimeline(4);
   var downloadBtn = document.getElementById('downloadBtn');
   if (downloadBtn) downloadBtn.textContent = isSizeDemo ? '导出 Excel' : '下载 Markdown';
 
+  function backendFileUrl(path) {
+    if (!path) return '';
+    if (/^https?:\/\//.test(path)) return path;
+    var cfg = window.NKS_LLM_CONFIG || {};
+    var base = (cfg.backendBaseURL || window.NKS_API_BASE_URL || 'http://127.0.0.1:8000/api/v1').replace(/\/$/, '');
+    if (path.charAt(0) === '/') {
+      try { return new URL(base).origin + path; } catch (e) { return path; }
+    }
+    return base + '/' + path.replace(/^\//, '');
+  }
+
   function renderDelivery() {
     var grid = document.getElementById('deliveryGrid');
     if (!grid) return;
@@ -249,6 +260,19 @@ NKS.mountTimeline(4);
       var grid3 = document.getElementById('deliveryGrid');
       var outs3 = (grid3 && grid3._outs) || [];
       if (isSizeDemo) {
+        var exportItem = taskV1 && Array.isArray(taskV1.excel_exports)
+          ? taskV1.excel_exports.find(function (item) { return item.type === 'standard_size_table'; }) || taskV1.excel_exports[0]
+          : null;
+        if (exportItem && exportItem.url) {
+          var backendLink = document.createElement('a');
+          backendLink.href = backendFileUrl(exportItem.url);
+          backendLink.download = exportItem.label || ((agentName || '小尺') + '-标准尺码表-v1.xlsx');
+          document.body.appendChild(backendLink);
+          backendLink.click();
+          backendLink.remove();
+          NKS.toast('已请求后端 Excel 导出', 'success');
+          return;
+        }
         var excelBlob = new Blob([buildExcelHtml(outs3)], { type: 'application/vnd.ms-excel;charset=utf-8' });
         var excelUrl = URL.createObjectURL(excelBlob);
         var excelLink = document.createElement('a');
@@ -288,6 +312,17 @@ NKS.mountTimeline(4);
       if (runHint) runHint.textContent = agentName + '正在调用企业记忆与红线，约 3 秒生成 V1';
       if (execStatus) { execStatus.textContent = '执行中'; execStatus.className = 'nks-tag primary'; }
 
+      var runPromise = Promise.resolve(taskV1);
+      if (window.NKS_LLM && window.NKS_LLM.executeTask) {
+        runPromise = NKS_LLM.executeTask({
+          company: company,
+          agent: ab,
+          input: taskV1.input_summary || (data.raw_demand && data.raw_demand.excerpt) || tasksAll[0] || '',
+          memory_rules: memUsed,
+          material_ids: state.materialIds || state.material_ids || [],
+        });
+      }
+
       var stepEls = execSteps ? execSteps.querySelectorAll('li') : [];
       var i = 0;
       function tick() {
@@ -296,21 +331,33 @@ NKS.mountTimeline(4);
           i++;
           setTimeout(tick, 700);
         } else {
-          renderDelivery();
-          if (deliveryCard) deliveryCard.hidden = false;
-          if (execStatus) { execStatus.textContent = '已完成'; execStatus.className = 'nks-tag success'; }
-          runBtn.textContent = '已生成 V1';
-          if (runHint) runHint.textContent = '产物已显示在下方，点击主按钮进入「反馈进化」';
-          // 写入状态供 feedback 使用
-          NKS.setState({
-            currentTask: { name: tasksAll[0] || '当前任务', employee: agentName },
-            taskV1: taskV1,
-            activeAgentKey: agentKey,
+          runPromise.then(function (result) {
+            if (result && Array.isArray(result.outputs)) {
+              taskV1 = Object.assign({}, taskV1, result);
+              memUsed = taskV1.memory_used || memUsed;
+            }
+            renderDelivery();
+            if (deliveryCard) deliveryCard.hidden = false;
+            if (execStatus) { execStatus.textContent = '已完成'; execStatus.className = 'nks-tag success'; }
+            runBtn.textContent = '已生成 V1';
+            if (runHint) runHint.textContent = '产物已显示在下方，点击主按钮进入「反馈进化」';
+            NKS.setState({
+              currentTask: { name: tasksAll[0] || '当前任务', employee: agentName },
+              taskV1: taskV1,
+              activeAgentKey: agentKey,
+            });
+            var goFb = document.getElementById('goFeedbackBtn');
+            if (goFb) goFb.href = '../feedback-evolution/index.html?agent=' + agentKey;
+            deliveryCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }).catch(function () {
+            renderDelivery();
+            if (deliveryCard) deliveryCard.hidden = false;
+            if (execStatus) { execStatus.textContent = '已完成'; execStatus.className = 'nks-tag success'; }
+            runBtn.textContent = '已生成 V1';
+            if (runHint) runHint.textContent = '后端暂未返回，已使用本地演示数据兜底';
+            NKS.setState({ currentTask: { name: tasksAll[0] || '当前任务', employee: agentName }, taskV1: taskV1, activeAgentKey: agentKey });
+            deliveryCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           });
-          // 让 feedback 页跟着切到当前 agent
-          var goFb = document.getElementById('goFeedbackBtn');
-          if (goFb) goFb.href = '../feedback-evolution/index.html?agent=' + agentKey;
-          deliveryCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       }
       tick();
