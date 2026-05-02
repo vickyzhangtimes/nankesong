@@ -65,6 +65,85 @@
     return String(b).replace(/\/$/, "");
   }
 
+  function getBackendBaseURL() {
+    var c = window.NKS_LLM_CONFIG || {};
+    var b = c.backendBaseURL || window.NKS_API_BASE_URL || "http://127.0.0.1:8000/api/v1";
+    return String(b).replace(/\/$/, "");
+  }
+
+  function shouldUseBackend() {
+    var c = window.NKS_LLM_CONFIG || {};
+    return c.useBackend !== false;
+  }
+
+  function allowBrowserModelDirect() {
+    var c = window.NKS_LLM_CONFIG || {};
+    return c.allowBrowserModelDirect === true;
+  }
+
+  function unwrapApiPayload(payload) {
+    if (payload && typeof payload.code === "number" && Object.prototype.hasOwnProperty.call(payload, "data")) {
+      return payload.data;
+    }
+    return payload;
+  }
+
+  function collectAgentIds(list) {
+    if (!Array.isArray(list)) return [];
+    return list
+      .map(function (item) {
+        return item && (item.agent_id || item.employee_id || item.id);
+      })
+      .filter(Boolean);
+  }
+
+  function postBackendJson(path, body) {
+    return fetch(getBackendBaseURL() + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body || {}),
+    }).then(function (r) {
+      return r.text().then(function (text) {
+        var payload = text ? JSON.parse(text) : {};
+        if (!r.ok) throw new Error("BACKEND_HTTP_" + r.status);
+        return unwrapApiPayload(payload);
+      });
+    });
+  }
+
+  function buildDemandRecognitionPayload(args) {
+    args = args || {};
+    var company = args.company || (window.NKS && NKS.getCompany ? NKS.getCompany() : "longxia");
+    return {
+      space_id: company,
+      raw_text: args.raw_demand || "",
+      material_ids: Array.isArray(args.material_ids) ? args.material_ids : [],
+      existing_agent_ids: collectAgentIds(args.existing_agents),
+      mode: "route_and_generate_skeleton",
+      enterprise_identity: args.enterprise_identity || {},
+      existing_agents: Array.isArray(args.existing_agents) ? args.existing_agents : [],
+    };
+  }
+
+  function buildAgentRunPayload(args) {
+    args = args || {};
+    var company = args.company || (window.NKS && NKS.getCompany ? NKS.getCompany() : "longxia");
+    var agent = args.agent || {};
+    var agentId = agent.agent_id || agent.employee_id || agent.id || "AGT-PRD-001";
+    return {
+      space_id: company,
+      agent_id: agentId,
+      task_type: args.task_type || (company === "longxia" || company === "nankesong" ? "size_table_cleanup" : "content_delivery"),
+      material_ids: Array.isArray(args.material_ids) ? args.material_ids : [],
+      run_mode: args.run_mode || "review_required",
+      input_text: args.input || "",
+      feedback: args.feedback || "",
+      agent: agent,
+      enterprise_identity: args.enterprise_identity || {},
+      memory_rules: Array.isArray(args.memory_rules) ? args.memory_rules : [],
+    };
+  }
+
   function responsesOutputText(json) {
     if (json && typeof json.output_text === "string" && json.output_text) {
       return json.output_text;
@@ -96,6 +175,7 @@
   }
 
   function postResponses(body) {
+    if (!allowBrowserModelDirect()) throw new Error("BROWSER_MODEL_DIRECT_DISABLED");
     var key = getApiKey();
     if (!key) throw new Error("NO_API_KEY");
     var url = getBaseURL() + "/responses";
@@ -185,6 +265,18 @@
   async function diagnose(args) {
     var company = args && args.company;
     var data = fallbackData(company);
+    if (shouldUseBackend()) {
+      try {
+        var backendObj = await withTimeout(
+          postBackendJson("/demand-recognitions", buildDemandRecognitionPayload(args)),
+          TIMEOUT_MS
+        );
+        if (!validDiagnose(backendObj)) throw new Error("BACKEND_SCHEMA_INVALID");
+        return backendObj;
+      } catch (e) {
+        console.warn("[Backend] demand-recognitions fallback:", e && e.message ? e.message : e);
+      }
+    }
     try {
       var user = buildDiagnoseUser({
         enterprise_identity: args.enterprise_identity,
@@ -203,6 +295,21 @@
   async function executeTask(args) {
     var company = args && args.company;
     var hasFeedback = !!(args && args.feedback && String(args.feedback).trim());
+    if (shouldUseBackend()) {
+      try {
+        var backendObj = await withTimeout(
+          postBackendJson("/agent-runs", buildAgentRunPayload(args)),
+          TIMEOUT_MS
+        );
+        if (!validExecute(backendObj)) throw new Error("BACKEND_SCHEMA_INVALID");
+        if (!Array.isArray(backendObj.memory_used)) backendObj.memory_used = [];
+        if (!Array.isArray(backendObj.feedback_rules_added)) backendObj.feedback_rules_added = [];
+        if (backendObj.memory_used_count == null) backendObj.memory_used_count = backendObj.memory_used.length;
+        return backendObj;
+      } catch (e) {
+        console.warn("[Backend] agent-runs fallback:", e && e.message ? e.message : e);
+      }
+    }
     try {
       var agent = args.agent || {};
       var sys =
