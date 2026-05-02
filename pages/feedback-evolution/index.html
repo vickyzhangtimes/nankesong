@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · 执行与进化</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell">
+    <header id="nks-topbar"></header>
+
+    <main class="nks-main">
+      <aside id="nks-sidebar" class="nks-sidebar"></aside>
+
+      <section class="nks-content nks-content-tight">
+        <!-- 顶部叙事条：这一步在干嘛 -->
+        <section class="fb-narrative" id="fb-narrative">
+          <div class="fb-narrative-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/>
+            </svg>
+          </div>
+          <div class="fb-narrative-text">
+            <h1 id="narrative-title">把你的反馈，变成企业的下一条规则</h1>
+            <p id="narrative-sub">你用一句话说出哪里不到位 → AI 拆成可执行的规则 → 写入企业记忆，<b>全员下次自动遵守</b>。</p>
+          </div>
+          <div class="fb-narrative-meta" id="narrative-meta"></div>
+        </section>
+
+        <nav class="nks-flow-strip" aria-label="主流程">
+          <a href="../job-agent-workbench-prototype/index.html">← 返回工作台</a>
+          <span class="muted">反馈 · 提炼规则 · 写入记忆</span>
+          <a href="../enterprise-memory/index.html">查看企业记忆 →</a>
+        </nav>
+
+        <!-- 段 1：V1 ←→ V2 对比 -->
+        <section class="fb-compare" id="fb-compare">
+          <div class="fb-section-head">
+            <span class="fb-step-num">1</span>
+            <div>
+              <h2>当前输出 vs 应用反馈后的输出</h2>
+              <p class="muted">写完反馈后，右侧会出现改进版，变动位置会高亮。</p>
+            </div>
+          </div>
+          <div class="fb-compare-grid">
+            <div class="fb-col fb-col-v1">
+              <div class="fb-col-head">
+                <span class="fb-tag">当前版本</span>
+                <span class="muted fb-col-sub" id="v1-meta"></span>
+              </div>
+              <div class="fb-col-body" id="v1-body"></div>
+            </div>
+            <div class="fb-col fb-col-v2" id="fb-col-v2">
+              <div class="fb-col-head">
+                <span class="fb-tag good">改进版本</span>
+                <span class="muted fb-col-sub" id="v2-meta">等待反馈</span>
+              </div>
+              <div class="fb-col-body" id="v2-body">
+                <div class="fb-v2-placeholder">
+                  <div class="fb-v2-placeholder-dot"></div>
+                  <div>在下方写一句反馈，<br/>点「生成改进版本」就会出现在这里</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 段 2：反馈 → 规则提炼 -->
+        <section class="fb-feedback" id="fb-feedback">
+          <div class="fb-section-head">
+            <span class="fb-step-num">2</span>
+            <div>
+              <h2>你说一句话 · AI 帮你拆成规则</h2>
+              <p class="muted">不需要写得严谨，说出哪里不对即可，AI 会拆成可执行的规则条目。</p>
+            </div>
+          </div>
+          <div class="fb-feedback-grid">
+            <div class="fb-feedback-input">
+              <label class="fb-label" for="feedback-ta">你的反馈</label>
+              <textarea class="nks-textarea" id="feedback-ta" maxlength="500"></textarea>
+              <div class="char-row"><span id="feedback-char">0 / 500</span><a href="#" id="feedback-clear">清空</a></div>
+              <button class="nks-btn primary block" id="generate-v2" type="button">生成改进版本与规则草案 →</button>
+            </div>
+            <div class="fb-feedback-arrow" aria-hidden="true">
+              <div class="fb-arrow-body">→</div>
+              <div class="fb-arrow-label" id="distill-status">等待反馈</div>
+            </div>
+            <div class="fb-feedback-rules">
+              <label class="fb-label">AI 拆出的规则</label>
+              <ol class="fb-rules-list" id="rules-list">
+                <li class="fb-rule fb-rule-empty">写完反馈、点击生成后，<br/>规则会一条条出现在这里</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- 段 3：写回企业记忆 -->
+        <section class="fb-writeback" id="fb-writeback">
+          <div class="fb-section-head">
+            <span class="fb-step-num">3</span>
+            <div>
+              <h2>写入企业记忆 · 锁定下次行为</h2>
+              <p class="muted">规则写入企业记忆后，会成为全员 Agent 执行同类任务时的硬约束。</p>
+            </div>
+          </div>
+          <div class="fb-writeback-card" id="writeback-card">
+            <div class="fb-writeback-row">
+              <span class="fb-wb-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <ellipse cx="12" cy="6" rx="8" ry="3"/>
+                  <path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/>
+                  <path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>
+                </svg>
+              </span>
+              <div class="fb-wb-meta">
+                <div class="fb-wb-label">企业记忆版本</div>
+                <div class="fb-wb-value"><b id="mem-ver">v8 → v9</b><span class="muted" id="mem-rules-count">新增 3 条规则</span></div>
+              </div>
+            </div>
+            <div class="fb-writeback-row">
+              <span class="fb-wb-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </span>
+              <div class="fb-wb-meta">
+                <div class="fb-wb-label">受影响员工</div>
+                <div class="fb-wb-value" id="mem-affected">全员 3 个 Agent · 下次执行自动生效</div>
+              </div>
+            </div>
+            <div class="fb-writeback-row">
+              <span class="fb-wb-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 2"/>
+                </svg>
+              </span>
+              <div class="fb-wb-meta">
+                <div class="fb-wb-label">生效时机</div>
+                <div class="fb-wb-value">下次同类任务 · 实时生效</div>
+              </div>
+            </div>
+            <div class="fb-writeback-actions">
+              <button class="nks-btn" id="restore-prev" type="button">仅保留当前版本</button>
+              <button class="nks-btn primary lg" id="save-v2" type="button" disabled>确认写入 · 完成本次反馈</button>
+            </div>
+            <div class="fb-writeback-status" id="mem-status"></div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="nks-rail nks-fade-up delay-2">
+        <div class="nks-card">
+          <h2>上下文</h2>
+          <div id="context-list"></div>
+        </div>
+        <div class="nks-card">
+          <h2>为什么要做这一步</h2>
+          <p class="nks-muted" style="font-size:13px;line-height:1.7;margin:0;">
+            只说一句「下次别这样」是不够的。<br/>
+            只有把反馈<b>拆成规则、写入企业记忆</b>，<br/>
+            下次同类任务时全员 Agent 才会自动遵守。
+          </p>
+        </div>
+      </aside>
+    </main>
+
+    <footer id="nks-timeline"></footer>
+  </div>
+
+    <script src="../../assets/llm-config.js"></script>
+  <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="../../assets/llm.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · AI 员工诞生确认</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body class="birthing">
+
+  <!-- 出生遮罩 -->
+  <div class="birth-overlay" id="birthOverlay">
+    <div class="birth-panel">
+      <div class="birth-orbit">A</div>
+      <div>
+        <h2>正在生成 AI 员工</h2>
+        <p>把刚确认的岗位骨架，写成一名可以交办任务的企业员工。</p>
+      </div>
+      <div class="birth-steps" id="birthSteps">
+        <div class="active">读取企业记忆</div>
+        <div>写入七层骨架</div>
+        <div>生成员工档案</div>
+        <div>创建工作台入口</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页面主体 -->
+  <div class="bc-app">
+    <!-- 顶栏由 NKS.mountTopbar() 挂载 -->
+
+    <div class="bc-main">
+      <aside id="nks-sidebar" class="nks-sidebar"></aside>
+
+      <section class="bc-content">
+      <div class="page-header">
+        <div>
+          <h1 id="pageTitle">确认部门 AI 员工</h1>
+          <p>请核对它能做什么、能用哪些资料，以及不能越过哪些边界。</p>
+        </div>
+      </div>
+
+      <div class="proof-layout">
+        <!-- 左：员工档案卡 -->
+        <article class="employee-card" id="employeeCard">
+          <div class="employee-head">
+            <div class="proof-badge">AI 员工档案</div>
+            <div class="employee-name" id="nameText">—</div>
+            <div class="code-row"><span>员工编号</span><b id="codeText">—</b></div>
+            <div class="status-row">
+              <span class="status-pill" id="statusText">待确认</span>
+              <span class="status-pill" id="stageText">试用期</span>
+              <span class="status-pill" id="versionText">资料已同步</span>
+            </div>
+          </div>
+          <div class="image-stage">
+            <img class="employee-img" id="employeeImg" alt="AI 员工形象" src="../../assets/avatars/mkt-cutout.png" />
+          </div>
+          <div class="org-grid">
+            <div class="org-cell"><small>归属部门</small><b id="departmentText">—</b></div>
+            <div class="org-cell"><small>汇报对象</small><b id="reportsToText">—</b></div>
+            <div class="org-cell"><small>生成时间</small><b id="hireDateText">—</b></div>
+            <div class="org-cell"><small>记忆状态</small><b id="memoryText">—</b></div>
+          </div>
+        </article>
+
+        <!-- 右：确认内容 -->
+        <article class="proof-card">
+          <div class="hero-copy">
+            <h2 id="headlineText">— <span class="accent">已准备好</span>加入。</h2>
+            <p id="personaText">—</p>
+          </div>
+
+          <div class="task-hero">
+            <div class="task-hero-head">
+              <span>可交办任务</span>
+              <b id="taskCountText">现在可以交办 4 类任务</b>
+            </div>
+            <ul class="task-list-primary" id="taskList"></ul>
+          </div>
+
+          <div class="module-grid">
+            <div class="module">
+              <h3><span class="module-icon">N</span>不会越过的边界</h3>
+              <ul class="mlist no" id="boundaryList"></ul>
+            </div>
+            <div class="module">
+              <h3><span class="module-icon">R</span>会用这些资料</h3>
+              <ul class="mlist" id="resourceList"></ul>
+            </div>
+            <div class="module">
+              <h3><span class="module-icon">L</span>最近学会了什么</h3>
+              <ul class="mlist" id="learningList"></ul>
+            </div>
+          </div>
+        </article>
+      </div>
+      </section>
+    </div>
+
+    <!-- 操作底栏 -->
+    <div class="bc-bottombar">
+      <span id="bottomHint">确认后，立刻给小薯派第一个任务，看她在工作台里跑出 V1 交付。</span>
+      <div class="bottom-actions">
+        <a href="../demand-diagnosis/index.html" class="nks-btn">返回诊断</a>
+        <a href="../ai-employee-roster/index.html" class="nks-btn">查看员工仓库</a>
+        <a href="../job-agent-workbench-prototype/index.html" class="nks-btn primary">给小薯派第一个任务 →</a>
+      </div>
+    </div>
+
+    <!-- 时间线由 NKS.mountTimeline() 挂载 -->
+  </div>
+
+    <script src="../../assets/llm-config.js"></script>
+  <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

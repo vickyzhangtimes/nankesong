@@ -1,0 +1,245 @@
+/* ── 工作台三栏壳 ── */
+.wb-main {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: var(--sp-4);
+  padding-bottom: 96px;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 300px;
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+/* ── 左：任务列表 ── */
+.wb-tasks {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  position: sticky;
+  top: 88px;
+}
+.wb-employee-strip {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 12px;
+  background: linear-gradient(135deg, var(--primary-soft) 0%, #fff 100%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+}
+.wb-emp-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #fff; display: grid; place-items: center;
+  font-size: 28px; box-shadow: var(--shadow-sm);
+}
+.wb-emp-meta { display: grid; gap: 2px; min-width: 0; }
+.wb-emp-name { font-weight: 700; font-size: 15px; color: var(--ink); }
+.wb-emp-title { color: var(--muted); font-size: 12px; }
+.wb-emp-status {
+  font-size: 11px; padding: 3px 8px; border-radius: 999px;
+  background: rgba(34,183,122,.12); color: var(--success);
+  font-weight: 600; white-space: nowrap;
+}
+
+.wb-tasks-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4px;
+}
+.wb-tasks-label { font-size: 13px; color: var(--muted); font-weight: 600; }
+.wb-tasks-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 999px; background: var(--primary); color: #fff;
+  font-size: 12px; font-weight: 700;
+}
+
+.wb-task-list { display: grid; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.wb-task-item {
+  display: grid;
+  grid-template-columns: 8px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.wb-task-item:hover { border-color: var(--primary); transform: translateX(2px); }
+.wb-task-item.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+.wb-task-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--muted);
+}
+.wb-task-item.active .wb-task-dot { background: var(--primary); box-shadow: 0 0 0 4px rgba(31,107,230,.15); }
+.wb-task-meta { display: grid; gap: 2px; min-width: 0; }
+.wb-task-meta b { font-size: 13px; color: var(--ink); font-weight: 600; }
+.wb-task-meta small { font-size: 11px; color: var(--muted); }
+.wb-task-item.active .wb-task-meta small { color: var(--primary); font-weight: 600; }
+
+.wb-tasks-foot { padding: 8px 4px 0; border-top: 1px dashed var(--line); }
+.wb-task-hint { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 8px 0 0; }
+
+/* ── 中：执行 + 产物 ── */
+.wb-center { display: grid; gap: var(--sp-3); min-width: 0; }
+.wb-runtime-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+.wb-runtime-left { display: grid; gap: 2px; }
+.wb-runtime-title { font-size: 18px; font-weight: 700; color: var(--ink); }
+.wb-runtime-sub { font-size: 12px; color: var(--muted); }
+.wb-runtime-right { display: flex; gap: 6px; }
+.wb-mode {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface);
+  cursor: pointer; font-size: 12px; color: var(--muted);
+  transition: all .15s ease;
+}
+.wb-mode input { display: none; }
+.wb-mode.active {
+  background: var(--ink); color: #fff; border-color: var(--ink);
+  font-weight: 600;
+}
+
+.wb-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3);
+  display: grid;
+  gap: var(--sp-3);
+}
+.wb-card-head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2);
+}
+.wb-card-head h2 { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink); }
+
+/* 执行步骤 */
+.wb-step-list {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 10px;
+}
+.wb-step-list li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg, #fafbfd);
+  transition: all .25s ease;
+}
+.wb-step-list li b { font-size: 13px; color: var(--ink); font-weight: 600; display: block; }
+.wb-step-list li small { display: block; margin-top: 3px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+.step-dot {
+  width: 14px; height: 14px; margin-top: 2px; border-radius: 50%;
+  border: 2px solid var(--line); background: var(--surface);
+  position: relative;
+}
+.wb-step-list li.done { background: rgba(34,183,122,.05); border-color: rgba(34,183,122,.4); }
+.wb-step-list li.done .step-dot {
+  background: var(--success); border-color: var(--success);
+}
+.wb-step-list li.done .step-dot::after {
+  content: ''; position: absolute; left: 3px; top: 0px;
+  width: 4px; height: 8px;
+  border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.wb-exec-actions {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding-top: 8px; border-top: 1px solid var(--line);
+}
+.wb-exec-actions .nks-btn.lg { font-size: 14px; padding: 10px 22px; }
+
+/* 产物预览 */
+.wb-deliv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.wb-deliv-item {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg, #fafbfd);
+  display: grid; gap: 6px;
+}
+.wb-deliv-platform {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--primary-soft); color: var(--primary-ink);
+  width: fit-content;
+}
+.wb-deliv-title { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.5; }
+.wb-deliv-body { font-size: 12px; color: var(--muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.wb-deliv-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding-top: 10px; border-top: 1px solid var(--line);
+}
+.wb-deliv-foot .nks-btn.primary { font-size: 14px; padding: 10px 18px; }
+
+/* ── 右：上下文 ── */
+.wb-context {
+  display: grid; gap: var(--sp-3);
+  position: sticky; top: 88px;
+}
+.wb-mem-list, .wb-redline-list {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 6px;
+}
+.wb-mem-list li, .wb-redline-list li {
+  font-size: 13px; color: var(--ink);
+  padding: 6px 10px;
+  border-left: 2px solid var(--primary);
+  background: var(--bg, #fafbfd);
+  border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+}
+.wb-redline-list li { border-left-color: var(--danger); }
+.wb-redline { border-color: rgba(217,72,72,.3); }
+.wb-redline .nks-tag.danger {
+  background: rgba(217,72,72,.12); color: var(--danger);
+}
+
+.wb-tip-card { border-style: dashed; }
+
+/* loading */
+.loading-overlay {
+  position: fixed; inset: 0; background: rgba(245,248,254,.95);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .3s ease;
+}
+.loading-overlay.active { opacity: 1; pointer-events: all; }
+.loading-spinner {
+  width: 48px; height: 48px; border: 3px solid var(--line); border-top-color: var(--primary);
+  border-radius: 50%; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { margin-top: var(--sp-3); font-size: 14px; color: var(--muted); }
+
+/* 响应式 */
+@media (max-width: 1100px) {
+  .wb-main { grid-template-columns: 1fr; }
+  .wb-tasks, .wb-context { position: static; }
+  .wb-deliv-grid { grid-template-columns: 1fr; }
+}

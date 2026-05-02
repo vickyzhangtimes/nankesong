@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · 企业记忆</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell">
+    <header id="nks-topbar"></header>
+
+    <main class="nks-main">
+      <aside id="nks-sidebar" class="nks-sidebar"></aside>
+
+      <section class="nks-content">
+        <div class="nks-page-head">
+          <div class="nks-page-title">
+            <h1>确认企业信息，上传第一份需求材料</h1>
+            <p>系统已自动生成企业身份证。确认后上传需求材料，这些信息将共同进入岗位记忆，用于后续岗位判断与执行。</p>
+          </div>
+        </div>
+
+        <nav class="nks-flow-strip" aria-label="主流程">
+          <a href="../company-onboarding/index.html">← 上一步 · 创建企业</a>
+          <span class="muted">Step 2 / 企业库与需求</span>
+          <a href="../demand-diagnosis/index.html">下一步 · 需求诊断 →</a>
+        </nav>
+
+        <div class="memory-layout">
+          <div class="top-notice nks-fade-up">
+            <svg class="top-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div class="top-notice-content">
+              <div class="top-notice-title">本页完成后，系统将自动进行：</div>
+              <div class="top-notice-list">
+                <span>需求归类</span>
+                <span>岗位判断</span>
+                <span>执行结构生成</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="identity-library-grid">
+            <section class="nks-card nks-fade-up">
+              <div class="identity-card-header">
+                <div>
+                  <h2>企业身份证</h2>
+                </div>
+                <div class="nks-tag-row">
+                  <span class="nks-pill success" id="identity-status"></span>
+                  <span class="nks-pill success" id="identity-confidence"></span>
+                </div>
+              </div>
+              <div id="identity-fields" class="identity-fields"></div>
+              <div class="status-line nks-small" id="identity-message"></div>
+              <button class="nks-btn secondary block" id="confirm-identity" type="button">确认企业身份证并继续</button>
+            </section>
+
+            <section class="nks-card library-panel nks-fade-up delay-1">
+              <div class="identity-card-header">
+                <div>
+                  <h2>企业资料库上传</h2>
+                  <p class="nks-muted" style="font-size: 13px;">（企业库 / 部门库）</p>
+                </div>
+              </div>
+              <div class="library-tabs" role="tablist">
+                <button class="library-tab active" id="enterprise-tab" type="button">企业库</button>
+                <button class="library-tab" id="department-tab" type="button">部门库</button>
+              </div>
+              <p class="nks-muted" style="font-size: 13px;" id="library-desc"></p>
+              <div class="upload-zone" id="library-upload" role="button" tabindex="0">
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <div class="upload-title" id="library-upload-title"></div>
+                <div class="upload-formats" id="library-formats"></div>
+                <div class="upload-tags" id="library-tags"></div>
+                <div class="upload-limit" id="library-limit"></div>
+              </div>
+              <input id="library-file" type="file" hidden multiple />
+              <div class="status-line nks-small" id="library-status"></div>
+            </section>
+          </div>
+
+          <section class="nks-card nks-fade-up delay-2" hidden>
+            <div class="identity-card-header">
+              <div>
+                <h2>上传你的第一份企业需求</h2>
+                <p class="nks-muted" style="font-size: 13px;">你可以直接粘贴需求，也可以上传文档，系统会统一理解并进入后续诊断。</p>
+              </div>
+            </div>
+            <div class="demand-grid">
+              <div class="demand-panel">
+                <div class="demand-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                  <span id="demand-title"></span>
+                </div>
+                <p class="demand-hint">例如：</p>
+                <textarea class="nks-textarea" id="demand-text" maxlength="5000" style="min-height: 160px;"></textarea>
+                <div class="char-row"><span id="char-count">0 / 5000</span></div>
+              </div>
+              <div class="demand-panel">
+                <div class="demand-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <span id="demand-upload-title"></span>
+                </div>
+                <div class="upload-zone" id="demand-upload" role="button" tabindex="0" style="min-height: 160px;">
+                  <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <div class="upload-title" id="demand-upload-hint"></div>
+                  <div class="upload-formats" id="demand-formats"></div>
+                  <div class="upload-limit" id="demand-limit"></div>
+                </div>
+                <input id="demand-file" type="file" hidden accept=".pdf,.doc,.docx,.txt,.md,image/*" />
+                <div class="status-line nks-small" id="demand-upload-status"></div>
+              </div>
+            </div>
+            <div class="bottom-bar">
+              <div class="bottom-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span id="memory-hint"></span>
+              </div>
+              <div class="nks-actions" style="margin-top: 0;">
+                <button class="nks-btn secondary" id="save-draft" type="button">保存草稿</button>
+                <button class="nks-btn primary" id="start-diagnosis" type="button">开始需求诊断</button>
+              </div>
+            </div>
+            <div class="status-line nks-small" id="diagnosis-status"></div>
+          </section>
+
+          <section class="nks-card nks-fade-up delay-2" style="text-align:center;padding:24px;">
+            <h2 style="margin-bottom:6px;">企业身份证已就位</h2>
+            <p class="nks-muted" style="font-size:13px;margin-bottom:16px;">下一步把第一份岗位需求贴进来，系统会自动诊断、做岗位匹配、生成 AI 员工。</p>
+            <a class="nks-btn primary lg" href="../demand-diagnosis/index.html" style="display:inline-block;min-width:240px;">下一步：开始需求诊断 →</a>
+          </section>
+        </div>
+      </section>
+
+      <aside class="nks-rail nks-fade-up delay-2">
+        <div class="nks-card">
+          <h2>当前进度</h2>
+          <div class="ctx-row"><span class="label">步骤</span><span class="value">企业记忆</span></div>
+          <div class="ctx-row"><span class="label">工作空间</span><span class="value" id="rail-workspace">—</span></div>
+          <div class="ctx-row"><span class="label">企业名称</span><span class="value" id="rail-company">—</span></div>
+        </div>
+        <div class="nks-card">
+          <h2>上下文摘要</h2>
+          <div class="context-list" id="context-list"></div>
+          <p class="nks-muted" style="font-size:12px;margin-top:var(--sp-2);" id="context-hint"></p>
+        </div>
+        <a class="nks-btn primary block" href="../demand-diagnosis/index.html" style="text-align:center;">进入需求诊断 →</a>
+      </aside>
+    </main>
+
+    <footer id="nks-timeline"></footer>
+  </div>
+
+    <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="../../assets/llm.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

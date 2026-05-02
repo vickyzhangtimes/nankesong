@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>企捏捏 · 启动</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <link rel="stylesheet" href="./assets/shell.css" />
+  <style>
+    .hero-wrap { max-width: 1100px; margin: 0 auto; padding: 32px var(--sp-4) var(--sp-5); }
+    .hero-head { text-align: center; margin-bottom: var(--sp-4); }
+    .hero-head h1 { font-size: 30px; margin-bottom: var(--sp-2); }
+    .hero-head p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); margin-top: var(--sp-4); }
+    .hero-card {
+      display: grid; gap: var(--sp-3);
+      padding: 28px 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      transition: all .2s;
+      position: relative;
+    }
+    .hero-card:hover { border-color: var(--primary); box-shadow: 0 8px 28px rgba(20,40,80,.08); transform: translateY(-2px); }
+    .hero-card .badge {
+      position: absolute; top: 16px; right: 16px;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      background: var(--primary-soft); color: var(--primary);
+    }
+    .hero-card.has h2 { color: #12a795; }
+    .hero-card.has .badge { background: rgba(34,183,122,.14); color: var(--success); }
+    .hero-card .icon { font-size: 32px; }
+    .hero-card h2 { font-size: 22px; margin: 0; line-height: 1.3; }
+    .hero-card .lead { color: var(--text); font-size: 14px; line-height: 1.7; margin: 0; }
+    .hero-card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    .hero-card ul li { font-size: 13px; color: var(--muted); padding-left: 18px; position: relative; }
+    .hero-card ul li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+    .hero-card.has ul li::before { color: var(--success); }
+    .hero-card .nks-btn { width: 100%; justify-content: center; height: 48px; font-size: 15px; }
+    .hero-card .agents-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .hero-card .agent-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 10px; border-radius: 999px;
+      background: var(--surface-2); border: 1px solid var(--line);
+      font-size: 12px; color: var(--ink);
+    }
+    .hero-foot { text-align: center; margin-top: var(--sp-4); }
+    .hero-foot a { color: var(--muted); font-size: 12px; text-decoration: none; }
+    .hero-foot a:hover { color: var(--primary); }
+    @media (max-width: 720px) { .hero-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="site-nav">
+    <a class="brand" href="./app.html" style="text-decoration:none;color:inherit;">
+      <div class="logo">捏</div>
+      <div>企捏捏 <span class="nick">启动台</span></div>
+    </a>
+    <div class="links"><a href="./pages/landing/index.html">官网</a></div>
+  </nav>
+  <div class="hero-wrap">
+    <div class="hero-head">
+      <h1>选择一条演示路径</h1>
+      <p>两家企业，两种姿态。看一家「从 0 创建」走完整链路，看一家「已有 Agent 在干活」直接派任务。</p>
+    </div>
+    <div class="hero-grid">
+      <!-- 左：新建企业 → 虹科 -->
+      <div class="hero-card">
+        <span class="badge">路径 A · 完整链路</span>
+        <div class="icon">🚀</div>
+        <h2>新建企业：虹科 · ToB 科技</h2>
+        <p class="lead">从登录 → 创建空间 → 上传企业资料 → 需求诊断 → 路由骨架 → 员工诞生 → 派任务 → 反馈进化，6 步完整闭环。</p>
+        <ul>
+          <li>看 AI 怎么读企业资料、判断需求归属</li>
+          <li>看一个新 Agent 怎么"出生"并接到任务</li>
+          <li>看反馈怎么变成下次要遵守的规则</li>
+        </ul>
+        <div class="agents-row">
+          <span class="agent-chip">🥔 小薯 · ToB 内容增长</span>
+          <span class="agent-chip">📞 小线 · 客户线索整理</span>
+        </div>
+        <a class="nks-btn primary" href="./pages/login/index.html?company=hongke" id="goNew">▶ 开始演示「新建企业」</a>
+      </div>
+
+      <!-- 右：已有企业 → 林蔷 -->
+      <div class="hero-card has">
+        <span class="badge">路径 B · 已有员工</span>
+        <div class="icon">🏢</div>
+        <h2>已有企业：林蔷 · 服装制造</h2>
+        <p class="lead">企业空间已就绪，2 个 AI 员工已在干活。直接进员工仓库挑一个交办任务，看记忆与红线如何贯穿到产出。</p>
+        <ul>
+          <li>跳过创建，直接看"用得熟"的状态</li>
+          <li>2 个完整闭环 Agent 各自带历史与反馈</li>
+          <li>派任务 → 看 V1 → 写反馈 → V2 写回记忆</li>
+        </ul>
+        <div class="agents-row">
+          <span class="agent-chip">📏 小尺 · 尺码整理流程</span>
+          <span class="agent-chip">💰 小账 · 财务费用归集</span>
+        </div>
+        <a class="nks-btn primary" href="./pages/ai-employee-roster/index.html" id="goExist">▶ 进入「已有企业」员工仓库</a>
+      </div>
+    </div>
+    <div class="hero-foot">
+      <a href="./pages/landing/index.html">查看产品介绍页</a> ·
+      <a href="./pages/product-demo-hub/index.html">跳过主链路 · 直达工作台（备查）</a>
+    </div>
+  </div>
+
+  <script>
+    // 双路径：点击前先切换公司，避免 localStorage 残留导致左右撕裂
+    function clearDemoState() {
+      try {
+        var s = JSON.parse(localStorage.getItem('nks_state') || '{}');
+        ['currentAgent','agentProfile','selectedEmployee','currentTask','taskV1',
+         'demandDiagnosis','routingDecision','sevenSkeleton','feedbackSession']
+          .forEach(function (k) { delete s[k]; });
+        localStorage.setItem('nks_state', JSON.stringify(s));
+      } catch(e){}
+    }
+    document.getElementById('goNew').addEventListener('click', function () {
+      localStorage.setItem('nks_company', 'hongke');
+      clearDemoState();
+    });
+    document.getElementById('goExist').addEventListener('click', function () {
+      localStorage.setItem('nks_company', 'longxia');
+      clearDemoState();
+    });
+  </script>
+</body>
+</html>

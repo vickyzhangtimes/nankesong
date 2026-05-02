@@ -99,9 +99,45 @@
     },
     roster: [
       { id: 'AGT-MKT-003', name: '小薯', title: 'ToB 内容增长专员', department: '市场部', status: 'V2 · 正在工作', tasks_done: 12 },
-      { id: 'AGT-MKT-004', name: '小线', title: '客户线索整理专员', department: '市场部', status: 'V1 · 试运行', tasks_done: 5 },
+      { id: 'AGT-MKT-004', name: '小线', title: '客户线索整理专员', department: '市场部', status: 'V2 · 正在工作', tasks_done: 8 },
       { id: 'AGT-OPS-001', name: '小渠', title: '渠道合规审核专员', department: '运营部', status: '待启用', tasks_done: 0 },
     ],
+    secondary_agent: {
+      avatar_emoji: '📞',
+      name: '小线',
+      employee_id: 'AGT-MKT-004',
+      title: '客户线索整理专员',
+      department: '市场部',
+      kpi: '每周汇总线索 ≥ 200 条，跟进提醒覆盖率 100%',
+      tasks_i_can_do: ['线索去重与合并', '客户摄要整理', '下一步跟进清单', '商机评分'],
+      red_lines: ['不伪造客户信息', '不跳过销售审核发送外部', '不泄露客户隐私于跨部门'],
+      opening: '你好，我是小线，市场部客户线索整理专员，工号 AGT-MKT-004。我会把多源线索汇总去重、生成跟进清单，但不会代表销售发送任何外部信息。',
+    },
+    secondary_task_v1: {
+      input_summary: 'CES 2026 展会营销表单 + 官网表单 + 销售手动记录 → 客户摄要 + 跟进清单',
+      memory_used_count: 5,
+      memory_used: ['企业身份证', '销售跟进 SOP', '客户分级规则', '红线规则', '去重字段表'],
+      outputs: [
+        { platform: '客户摄要', title: 'CES 2026 高意向客户 36 位', body: 'A 类（遇到过需求）：12；B 类（明确项目）：8；C 类（粗选）：16。已去重并与 CRM 库比对，新增客户 22 人。' },
+        { platform: '跟进清单', title: '下周跟进 36 项（已按优先级排序）', body: '高优先 12 项（需销售亲自联系） / 中优先 8 项（备选邮件跳发） / 低优先 16 项（进营销池）。' },
+        { platform: '商机评分', title: '商机评分 Top 5【仅供内部】', body: '某 OEM 智能驾驶 BU、5A；某 Tier1 测试部、4A……' },
+      ],
+    },
+    secondary_feedback: {
+      raw: '「C 类」不要直接进营销池，要先补企业信息再打分；高优先邮件不要你发，只生成草稿。',
+      rules_added: [
+        'C 类客户需补齐 5 字段后才能进营销池，缺字段一律进「待补齐」状态',
+        '高优先跟进仅生成邮件草稿，标「需销售人工发送」，不自动发送',
+        '商机评分 ≥ 4A 一律进「销售领导审核」问责，不直接下发',
+      ],
+    },
+    secondary_task_v2: {
+      memory_used_count: 8,
+      outputs: [
+        { platform: '客户摄要', title: 'CES 2026 高意向客户 36 位（v2）', body: 'C 类 16 人中 9 人进「待补齐」状态，7 人补齐后进营销池；A/B 类保持不变。', diff: ['C 类路径'] },
+        { platform: '跟进清单', title: '下周跟进 36 项（v2）', body: '高优先 12 项只生成草稿（需销售亲自发）；中优先 8 项保留备选邮件；低优先 7 项（已补齐）进营销池。', diff: ['高优先草稿化', '低优先补齐门槛'] },
+      ],
+    },
   };
 
   const LONGXIA = {
@@ -191,9 +227,45 @@
     },
     roster: [
       { id: 'AGT-PRD-001', name: '小尺', title: '尺码整理流程助理', department: '商品部', status: 'V2 · 正在工作', tasks_done: 18 },
-      { id: 'AGT-FIN-002', name: '小账', title: '财务费用归集助理', department: '财务部', status: 'V1 · 试运行', tasks_done: 7 },
+      { id: 'AGT-FIN-002', name: '小账', title: '财务费用归集助理', department: '财务部', status: 'V2 · 正在工作', tasks_done: 11 },
       { id: 'AGT-DSN-001', name: '小图', title: '批量套图执行助理', department: '设计部', status: '待启用', tasks_done: 0 },
     ],
+    secondary_agent: {
+      avatar_emoji: '💰',
+      name: '小账',
+      employee_id: 'AGT-FIN-002',
+      title: '财务费用归集助理',
+      department: '财务部',
+      kpi: '月度费用归类准确率 ≥ 98%，异常项 100% 标记人工复核',
+      tasks_i_can_do: ['多格式费用表识别', '费用项目归类', '生成异常清单', '输出复核表'],
+      red_lines: ['不自动审批付款', '不代替财务复核', '不改写原始凭证'],
+      opening: '你好，我是小账，财务部费用归集助理，工号 AGT-FIN-002。我会按财务科目表归类费用并标记异常，但不会代你审批任何付款。',
+    },
+    secondary_task_v1: {
+      input_summary: '4 月全公司费用报销原始表 487 条（差旅/营销/办公/其他混装）→ 归类汇总 + 异常清单',
+      memory_used_count: 5,
+      memory_used: ['企业身份证', '财务科目表 v3', '历史费用归类样本', '异常阈值规则', '复核表模板'],
+      outputs: [
+        { platform: '归类汇总表', title: '4 月费用归类汇总 v1', body: '差旅费 ¥28,400 / 营销费 ¥41,200 / 办公费 ¥16,800 / 待人工判断 ¥9,600。总计 487 条中 412 条自动归类成功。' },
+        { platform: '异常清单', title: '异常 18 条', body: '超阈值 6 条（单笔 > ¥5000） / 发票与报销人不一致 4 条 / 备注模糊 8 条。' },
+        { platform: '复核表（节选）', title: '待复核 18 条，重点 6 条超阈值', body: '金额 / 部门 / 报销人 / 原因描述 / AI 初判 / 人工复核意见（6 列）。' },
+      ],
+    },
+    secondary_feedback: {
+      raw: '「与供应商饭局」这种不要默认进「营销费」，要看是否含项目号；超 5000 不够，补一条 ¥1 万以上必须附 PDF 发票。',
+      rules_added: [
+        '含「供应商/客户/项目号」的餐饮费需人工确认是「营销费」或「项目费」，不自动归类',
+        '单笔≥5000 且未附 PDF 发票一律标「凭证不全」，进异常清单',
+        '备注模糊、金额≥1万的报销一律标「人工复核」，不给归类推荐',
+      ],
+    },
+    secondary_task_v2: {
+      memory_used_count: 8,
+      outputs: [
+        { platform: '归类汇总表', title: '4 月费用归类汇总 v2', body: '备注含「供应商」的 11 条餐饮费从营销费移出，进「人工复核」；总费用金额重新汇总。', diff: ['餐饮费路径'] },
+        { platform: '异常清单', title: '异常 18 + 7 条（新增凭证不全）', body: '新增 7 条「凭证不全」条目（超 5000 不附 PDF），需补发票后重新提交。', diff: ['凭证不全门槛', '人工复核路径'] },
+      ],
+    },
   };
 
   // —— 6 个引导问题（用于"创建企业空间"那个 Q&A 卡片）——
@@ -205,6 +277,153 @@
     { idx: 5, q: '贵公司当前的业务目标是什么？（可多选或简要描述）', field: 'business_goals' },
     { idx: 6, q: '在使用 AI 员工过程中，贵公司的风险红线或合规要求是什么？', field: 'risk_rules' },
   ];
+
+  const ONBOARDING_LABELS = {
+    enterprise_name: '企业名称',
+    website: '官方网站',
+    industry: '所属行业',
+    main_customers: '主要客户',
+    business_goals: '业务目标',
+    risk_rules: '风险红线',
+  };
+
+  function finalizeCompany(c) {
+    var id = c.enterprise_identity;
+    id.industry_judgement = id.industry;
+    id.customer_type = id.main_customers ? id.main_customers.slice() : [];
+    id.business_goal = id.business_goals ? id.business_goals.slice() : [];
+    if (!id.status) id.status = '已生成';
+    if (!id.confidence) id.confidence = '高';
+    c.display_name = id.enterprise_name;
+    c.workspace_name = id.enterprise_name + ' · 企捏捏空间';
+    c.onboarding = {
+      eta: '约 1 分钟',
+      collected_hint: '可随时在右侧摘要中核对已填信息。',
+      questions: ONBOARDING_QUESTIONS.map(function (row) {
+        return {
+          id: row.field,
+          label: ONBOARDING_LABELS[row.field] || row.field,
+          question: row.q,
+        };
+      }),
+    };
+    c.demand_input = {
+      recommended_title: '推荐：粘贴会议纪要或需求片段',
+      sample_text: c.raw_demand && c.raw_demand.excerpt ? c.raw_demand.excerpt : '',
+      upload_title: '上传需求文档',
+      upload_hint: '支持 Word / PDF / 飞书妙记导出',
+      formats: 'Word · PDF · TXT',
+      limit: '单文件 ≤ 20MB',
+      memory_hint: '系统将结合企业库与部门库进行归类',
+      feedback_text: c.feedback && c.feedback.raw ? c.feedback.raw : '',
+    };
+    c.enterprise_library = {
+      name: '企业库',
+      description: '企业级通用资产与红线',
+      upload_hint: '拖拽或点击上传',
+      formats: 'PDF · Word · MD',
+      limit: '单文件 ≤ 20MB',
+      tags: ['产品介绍', '品牌规范', '红线'],
+    };
+    c.department_library = {
+      name: '部门库',
+      description: '部门专属模板与语料',
+      upload_hint: '拖拽或点击上传',
+      formats: 'Excel · PDF · MD',
+      limit: '单文件 ≤ 20MB',
+      tags: ['模板', '样例', '术语表'],
+    };
+    var rd = c.routing_decision;
+    rd.match_label = rd.match_label || '胜任匹配';
+    rd.match_score = rd.match_score || '92%';
+    c.route_options = [
+      { title: '在现有 Agent 下新增 workflow', status: '推荐', tone: 'recommended', reason: '与路由结论一致，改动最小。' },
+      { title: '合并到邻近岗位职责', status: '备选', tone: 'warning', reason: '需评估职责边界清晰度。' },
+      { title: '新建独立岗位 Agent', status: '不推荐', tone: 'danger', reason: '除非出现全新岗位职责，否则不建议。' },
+    ];
+    c.evidence = {
+      recognized_info: [id.enterprise_name, id.industry],
+      key_problems: c.raw_demand && c.raw_demand.excerpt ? [String(c.raw_demand.excerpt).slice(0, 120) + '…'] : [],
+      memory_refs: ['企业身份证', '部门红线', '历史样例'],
+    };
+    c.workbench_run = {
+      current_agent: rd.target_agent,
+      task: c.task_v1 && c.task_v1.input_summary ? c.task_v1.input_summary : '',
+      memory_state: '已读取企业库',
+      iteration_state: 'V2 已生成',
+    };
+    c.v1_output = {
+      title: 'V1 初稿概览',
+      summary: c.feedback && c.feedback.raw ? c.feedback.raw : '待用户反馈',
+      issues: ['语气偏营销', '部分表述需核对事实'],
+    };
+    c.v2_output = {
+      title: 'V2 优化概览',
+      summary: '已按反馈收紧语气与事实表述',
+      improvements: c.feedback && c.feedback.rules_added ? c.feedback.rules_added.slice() : [],
+    };
+    c.memory_writeback = {
+      version_from: 'V1',
+      version_to: 'V2',
+      rules: c.feedback && c.feedback.rules_added ? c.feedback.rules_added.slice() : [],
+      status: '已写入企业记忆',
+      note: '全员 Agent 下次运行自动生效',
+    };
+    c.export_options = [
+      { type: 'pdf', label: '导出 PDF', description: '含对比与审批流' },
+      { type: 'doc', label: '导出 Word', description: '便于法务留存' },
+    ];
+    var ab = c.agent_birth_card;
+    if (ab) {
+      ab.agent_id = ab.agent_id || ab.employee_id;
+      ab.status = ab.status || '已就绪';
+      ab.role = ab.role || ab.title;
+      ab.persona_line = ab.persona_line || ab.opening;
+      ab.responsibilities = ab.responsibilities || ab.tasks_i_can_do || [];
+      ab.memory_status = ab.memory_status || {
+        read_count: c.task_v1 && c.task_v1.memory_used_count ? c.task_v1.memory_used_count : 0,
+        read_items: c.task_v1 && c.task_v1.memory_used ? c.task_v1.memory_used.slice() : [],
+      };
+    }
+    return c;
+  }
+
+  finalizeCompany(HONGKE);
+  finalizeCompany(LONGXIA);
+
+  // —— 给两家附加 secondary_* 闭环数据派生（v1_output / v2_output / workbench_run / memory_writeback）——
+  function finalizeSecondary(c) {
+    var sec = c.secondary_agent;
+    var t1 = c.secondary_task_v1;
+    var fb = c.secondary_feedback;
+    var t2 = c.secondary_task_v2;
+    if (!sec || !t1) return;
+    c.secondary_workbench_run = {
+      current_agent: (sec.department || '') + ' · ' + (sec.title || ''),
+      task: t1.input_summary || '',
+      memory_state: '已读取企业库',
+      iteration_state: t2 ? 'V2 已生成' : 'V1 已生成',
+    };
+    c.secondary_v1_output = {
+      title: 'V1 初稿概览',
+      summary: (t1.outputs && t1.outputs[0] && t1.outputs[0].title) || '',
+      issues: c._secondary_v1_issues || ['路径偏向默认归类', '高优先级处置过于激进'],
+    };
+    c.secondary_v2_output = {
+      title: 'V2 优化概览',
+      summary: '已按反馈收紧门槛与人工复核路径',
+      improvements: (fb && fb.rules_added) ? fb.rules_added.slice() : [],
+    };
+    c.secondary_memory_writeback = {
+      version_from: 'V1',
+      version_to: 'V2',
+      rules: (fb && fb.rules_added) ? fb.rules_added.slice() : [],
+      status: '已写入企业记忆',
+      note: '全员 Agent 下次运行自动生效',
+    };
+  }
+  finalizeSecondary(HONGKE);
+  finalizeSecondary(LONGXIA);
 
   window.DEMO_DATA = {
     hongke: HONGKE,

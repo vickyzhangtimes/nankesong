@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · 认知与空间</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell">
+    <header id="nks-topbar"></header>
+
+    <main class="nks-main">
+      <aside id="nks-sidebar" class="nks-sidebar"></aside>
+
+      <section class="nks-content">
+        <div class="nks-page-head">
+          <div class="nks-page-title">
+            <h1>让我们先了解您的企业</h1>
+            <p>Agent 将通过 6 个简短问题，自动生成企业身份证，并为后续岗位 Agent 判断提供基础。</p>
+          </div>
+        </div>
+
+        <div class="conversation-area nks-fade-up">
+          <div class="progress-row">
+            <div class="progress-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              <span id="progress-pill">问题进度 0/6</span>
+            </div>
+            <div class="progress-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              <span id="eta-pill">预计用时 1 分钟</span>
+            </div>
+          </div>
+
+          <div id="chat-area" class="chat-area"></div>
+
+          <div class="input-area">
+            <div class="input-row">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              <input class="input-field" id="chat-input" type="text" placeholder="补充说明，例如特殊禁用词、客户类型、业务红线......" />
+              <button class="send-btn" id="send-btn" type="button" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="chat-hint" id="chat-hint" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+            <span id="chat-hint-text"></span>
+          </div>
+
+          <div class="status-line nks-small" id="page-status"></div>
+          <button class="nks-btn primary block" id="generate-identity" type="button" style="display: none;"> 确认生成企业身份证</button>
+        </div>
+      </section>
+
+      <aside class="nks-card summary-card nks-fade-up delay-1">
+        <div class="summary-header">
+          <h2>系统已提取</h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+        </div>
+        <div id="summary-list" class="summary-list"></div>
+        <div class="summary-hint">
+          <p id="collected-hint"></p>
+        </div>
+      </aside>
+    </main>
+
+    <footer id="nks-timeline"></footer>
+  </div>
+
+    <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

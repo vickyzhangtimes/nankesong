@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 - AI 员工确认</title>
+  
+</head>
+<body class="birthing">
+  <div class="birth-overlay" id="birthOverlay" aria-live="polite">
+    <div class="birth-panel">
+      <div class="birth-orbit">
+        <span>A</span>
+      </div>
+      <div>
+        <h2>正在生成 AI 员工</h2>
+        <p>把刚确认的岗位骨架，写成一名可以交办任务的企业员工。</p>
+      </div>
+      <div class="birth-steps" id="birthSteps">
+        <div class="active">读取企业记忆</div>
+        <div>写入七层岗位骨架</div>
+        <div>生成员工档案</div>
+        <div>创建工作台入口</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+          <strong>岗位 Agent 工厂</strong>
+          <span>企业 AI 员工管理台</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn" id="switchCompanyBtn">切换企业</button>
+        <button class="btn ghost" id="departmentPill">市场部</button>
+        <button class="btn">已保存</button>
+        <div class="avatar-icon">V</div>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div><b>企业资料</b><span>企业与部门资料已接入</span></div></div>
+          <div class="step"><div class="step-num">2</div><div><b>岗位需求</b><span>已生成岗位建议</span></div></div>
+          <div class="step active"><div class="step-num">3</div><div><b>确认 AI 员工</b><span>核对身份、任务和边界</span></div></div>
+          <div class="step"><div class="step-num">4</div><div><b>开始使用</b><span>交办任务并持续改进</span></div></div>
+        </div>
+
+        <div class="side-card">
+          <small>当前岗位</small>
+          <b id="sideRole">市场部内容增长专员</b>
+          <p id="sideVersion">已接入企业资料、市场部资料和历史内容。</p>
+        </div>
+
+        <div class="side-card">
+          <small>下一步</small>
+          <p>确认无误后进入工作台，分配第一项任务并查看产出。</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="page-title">
+          <div>
+            <h1 id="pageTitle">确认市场部 AI 员工</h1>
+            <p>请核对它能做什么、能用哪些资料，以及不能越过哪些边界。</p>
+          </div>
+          <div class="role-tabs" id="roleTabs"></div>
+        </div>
+
+        <section class="proof-layout">
+          <article class="employee-card" id="employeeCard">
+            <div class="employee-head">
+              <div class="proof-badge">AI 员工档案</div>
+              <div class="employee-name" id="nameText">小策 · ToB 内容增长 Agent</div>
+              <div class="code-row"><span>员工编号</span><b id="codeText">MKT 003</b></div>
+              <div class="status-row">
+                <span class="status-pill" id="statusText">待确认</span>
+                <span class="status-pill" id="stageText">试用期</span>
+                <span class="status-pill" id="versionText">资料已同步</span>
+              </div>
+            </div>
+
+            <div class="image-stage">
+              <img class="employee-img" id="employeeImg" alt="AI 员工形象" src="../../assets/avatars/mkt-cutout.png" />
+            </div>
+
+            <div class="org-grid">
+              <div class="org-cell"><small>归属部门</small><b id="departmentText">市场部</b></div>
+              <div class="org-cell"><small>汇报对象</small><b id="reportsToText">张经理</b></div>
+              <div class="org-cell"><small>生成时间</small><b id="hireDateText">2026-05-02</b></div>
+              <div class="org-cell"><small>记忆状态</small><b id="memoryText">已读取 6 条</b></div>
+            </div>
+          </article>
+
+          <article class="proof-card">
+            <div class="hero-copy">
+              <h2 id="headlineText">小策<span>已准备好</span>加入市场部。</h2>
+              <p id="personaText">适合处理市场部日常内容任务，默认遵守专业、克制的表达规则。</p>
+            </div>
+
+            <div class="task-hero">
+              <div class="task-hero-head">
+                <span>可交办任务</span>
+                <b>现在可以交办 4 类任务</b>
+              </div>
+              <ul class="task-list-primary" id="taskList"></ul>
+            </div>
+
+            <div class="evidence-bar">
+              <strong>生成依据</strong>
+              <span id="sourceText">企业画像 · 市场部资料 · 历史公众号 · 岗位说明 · 历史反馈</span>
+            </div>
+
+            <div class="readiness-grid">
+              <div class="readiness-card"><b id="metric1">4 类</b><span id="metric1Label">可交办任务</span></div>
+              <div class="readiness-card"><b id="metric2">6 条</b><span id="metric2Label">已读取资料</span></div>
+              <div class="readiness-card"><b id="metric3">5 类</b><span id="metric3Label">可调用资料</span></div>
+              <div class="readiness-card"><b id="metric4">4 条</b><span id="metric4Label">已启用边界</span></div>
+            </div>
+
+            <div class="module-grid">
+              <div class="module">
+                <h3><span class="module-icon">N</span>不会越过的边界</h3>
+                <ul class="list no" id="boundaryList"></ul>
+              </div>
+              <div class="module">
+                <h3><span class="module-icon">R</span>会用这些资料</h3>
+                <ul class="list" id="resourceList"></ul>
+              </div>
+              <div class="module">
+                <h3><span class="module-icon">L</span>最近学会了什么</h3>
+                <ul class="list" id="learningList"></ul>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <aside class="rightbar">
+        <div class="right-title">
+          <h2>准备情况</h2>
+          <span class="stable">可使用</span>
+        </div>
+
+        <div class="status-card">
+          <h3>资料读取</h3>
+          <div class="progress-row">
+            <div class="donut" id="memoryDonut">82%</div>
+            <p id="memoryStatus">已读取 6 条企业记忆<br>覆盖企业画像、标题规则、术语规则</p>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <h3>最近改进</h3>
+          <p id="versionStatus">已记住：标题要更专业，避免夸张营销表达。</p>
+        </div>
+
+        <div class="status-card">
+          <h3>可以开始</h3>
+          <p id="workspaceStatus">该 AI 员工已准备好接收市场部内容任务。</p>
+          <div class="chip-row" id="chipRow"></div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="bottombar">
+      <span id="bottomHint">确认后，这名 AI 员工会出现在市场部工作台中。</span>
+      <div class="bottom-actions">
+        <button class="btn" id="resetBtn">返回修改</button>
+        <button class="btn" id="upgradeBtn">补充改进建议</button>
+        <button class="btn primary" id="primaryStartBtn">开始交办任务 →</button>
+      </div>
+    </footer>
+  </div>
+
+    <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

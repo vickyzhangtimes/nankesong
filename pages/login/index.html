@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>登录 · Agentry 企捏捏</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+
+  <!-- 顶栏 -->
+  <nav class="site-nav">
+    <a class="brand" href="../landing/index.html" style="text-decoration:none;color:inherit;">
+      <div class="logo">捏</div>
+      <div>企捏捏 <span class="nick">Agentry</span></div>
+    </a>
+    <div class="links">
+      <a href="../landing/index.html">← 返回首页</a>
+    </div>
+  </nav>
+
+  <!-- 两栏布局 -->
+  <div class="login-wrap">
+
+    <!-- 左：价值文案，让用户继续往下点 -->
+    <section class="pitch">
+      <h1>登录后，<br/>你的第一个 <em>AI 员工</em><br/>30 秒就能上岗。</h1>
+      <p class="lead">
+        没有 prompt 工程，没有 workflow 拖拽。
+        把一段会议记录或一句吐槽丢进来，
+        <b>Agentry 自动判断岗位、生成边界、跑出 V1 交付</b>，
+        一句反馈下一版立刻进化。
+      </p>
+
+      <div class="perks">
+        <div class="perk">
+          <div class="ico">⚡</div>
+          <div>
+            <div class="t">3 分钟首个员工上岗</div>
+            <div class="d">从混乱需求到能干活的 AI 员工，比写一份 prompt 还快</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="ico">🛡</div>
+          <div>
+            <div class="t">企业级红线 / 不自动发布</div>
+            <div class="d">关键决策必须人工确认，敏感数据不离开你的空间</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="ico">🔁</div>
+          <div>
+            <div class="t">反馈写入企业记忆，全员共享</div>
+            <div class="d">你提一句"不要太营销"，整家公司的 AI 员工都遵守</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust">
+        🔒 手机号仅用于身份校验 ·
+        <b>不会发送营销短信</b> ·
+        企业数据存储在你的空间内
+      </div>
+    </section>
+
+    <!-- 右：登录表单卡 -->
+    <section class="login-card">
+      <div class="head">
+        <h2 id="form-title">手机号登录 / 注册</h2>
+        <span class="swap">未注册手机号验证后将自动创建账号</span>
+      </div>
+      <p class="sub">输入手机号获取验证码，30 秒后即可进入你的企业空间</p>
+
+      <!-- 登录方式 tab：手机为主，邮箱为次（不实现，标"即将上线"）-->
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="phone">手机验证码</div>
+        <div class="tab" data-tab="email" title="即将上线">邮箱密码 · 即将上线</div>
+      </div>
+
+      <!-- 手机表单 -->
+      <form id="phone-form" novalidate>
+        <div class="field">
+          <label class="label" for="phone">手机号</label>
+          <div class="phone-row">
+            <select class="nks-input" id="region">
+              <option value="+86" selected>🇨🇳 +86</option>
+              <option value="+852">🇭🇰 +852</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+            </select>
+            <input class="nks-input" id="phone" type="tel" inputmode="numeric"
+                   placeholder="请输入 11 位手机号" maxlength="11" autocomplete="tel-national" />
+          </div>
+          <div class="hint" id="phone-hint">请输入正确的 11 位手机号</div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="code">验证码</label>
+          <div class="input-row">
+            <input class="nks-input" id="code" type="text" inputmode="numeric"
+                   placeholder="6 位短信验证码" maxlength="6" autocomplete="one-time-code" />
+            <button type="button" class="nks-btn send-code" id="send-code">获取验证码</button>
+          </div>
+          <div class="hint" id="code-hint">验证码错误或已过期</div>
+          <div class="hint hint-ok" id="code-sent">已发送至 <b id="masked-phone"></b>（演示环境验证码：<b>123456</b>）</div>
+        </div>
+
+        <label class="agree">
+          <input type="checkbox" id="agree" checked />
+          <span>
+            我已阅读并同意
+            <a href="#">《用户协议》</a> 与
+            <a href="#">《隐私政策》</a>，
+            授权 Agentry 创建并使用我的企业空间
+          </span>
+        </label>
+
+        <button type="submit" class="nks-btn primary lg block" id="submit-btn">登录 / 注册</button>
+
+        <div class="demo-shortcut">
+          路演 / 评委来访？
+          <button type="button" class="nks-btn block" id="demo-login">用演示账号一键登录 →</button>
+        </div>
+      </form>
+
+      <div class="switch">
+        登录遇到问题？<a href="#">联系我们</a>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-foot">
+    Agentry · 企捏捏 · 几句话，捏出你的理想 AI 员工 © 2026
+  </footer>
+
+  
+  <script src="./script.js"></script>
+</body>
+</html>
