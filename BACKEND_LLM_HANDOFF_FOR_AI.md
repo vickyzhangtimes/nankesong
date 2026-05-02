@@ -186,6 +186,12 @@ pages/job-agent-workbench-prototype/index.html
 
 ## 5. P0 接口，只接这 5 个
 
+### 5.0 对接口径确认
+
+以后端接口为准。前端保留现有页面按钮和 `NKS_LLM.diagnose()` / `NKS_LLM.executeTask()` 调用名，但内部已经改为优先请求本节 `/api/v1` P0 接口。
+
+浏览器不再携带模型 API Key，也不再把主链路直连 `/responses`。`assets/llm-config.js` 中 `allowBrowserModelDirect = false`，模型调用应由后端 FastAPI 代理完成。后端未启动或接口未返回合格 JSON 时，前端自动回落到本地 mock，保证现场 Demo 不断。
+
 接口前缀建议：
 
 ```text
@@ -670,4 +676,3 @@ console/pageerror：无错误
 ## 10. 给模型链路 AI 的一句话指令
 
 你不是在做聊天机器人，也不是在做通用 Agent 平台。你的任务是把一家校服企业商品部的混乱尺码整理需求，识别成一个新岗位 AI 员工“小尺”，生成完整七层岗位骨架，并让它输出可复核、可导出的标准尺码表和异常清单。所有输出必须结构化，所有关键决策必须留给人工复核。
-
