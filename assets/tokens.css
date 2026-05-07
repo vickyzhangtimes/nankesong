@@ -1,0 +1,294 @@
+/* ============================================================
+ * 岗位 Agent 工厂 · 全局 Design Tokens
+ * 任何页面只允许引用本文件，不允许在自己的 <style> 里写颜色字面量
+ * ============================================================ */
+
+:root {
+  /* —— 颜色 —— */
+  --primary:        #2F6DF6;
+  --primary-hover:  #1E5BDF;
+  --primary-soft:   #EAF2FF;
+  --primary-ink:    #173A89;
+
+  --ink:            #0B1733;
+  --text:           #2A3654;
+  --muted:          #6B7894;
+  --line:           #E4EAF4;
+
+  --bg:             #F5F8FE;
+  --surface:        #FFFFFF;
+  --surface-2:      #F8FBFF;
+
+  --success:        #22B77A;
+  --success-soft:   #E6F7EE;
+  --warn:           #F59E0B;
+  --warn-soft:      #FFF3B0;
+  --danger:         #D94848;
+  --danger-soft:    #FDECEC;
+
+  /* —— 圆角 —— */
+  --radius-sm:  8px;
+  --radius:     12px;
+  --radius-lg:  16px;
+  --radius-pill: 999px;
+
+  /* —— 阴影（只允许这两种）—— */
+  --shadow-sm: 0 4px 12px rgba(15, 39, 89, 0.05);
+  --shadow:    0 8px 24px rgba(15, 39, 89, 0.06);
+
+  /* —— 间距（只允许 8/12/16/24/32）—— */
+  --sp-1: 8px;
+  --sp-2: 12px;
+  --sp-3: 16px;
+  --sp-4: 24px;
+  --sp-5: 32px;
+
+  /* —— 字号 —— */
+  --fs-h1: 28px;
+  --fs-h2: 18px;
+  --fs-body: 14px;
+  --fs-sm: 13px;
+  --fs-xs: 12px;
+}
+
+/* —— Reset —— */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system,
+               BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: var(--fs-h1); font-weight: 700; color: var(--ink); line-height: 1.2; }
+h2 { font-size: var(--fs-h2); font-weight: 600; color: var(--ink); line-height: 1.3; }
+h3 { font-size: 15px; font-weight: 600; color: var(--ink); }
+p  { color: var(--text); }
+
+a  { color: var(--primary); text-decoration: none; }
+
+/* ============================================================
+ * 全局组件类（队友直接 className 引用，不要重写）
+ * ============================================================ */
+
+/* —— TopBar 顶栏 —— */
+.nks-topbar {
+  height: 64px;
+  padding: 0 var(--sp-4);
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.nks-brand {
+  display: flex; align-items: center; gap: var(--sp-2);
+  font-weight: 700; color: var(--ink); font-size: 16px;
+}
+.nks-brand .logo {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), #5E9CFF);
+  color: #fff;
+  display: grid; place-items: center;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(47, 109, 246, 0.28);
+}
+.nks-topbar-right {
+  display: flex; align-items: center; gap: var(--sp-2);
+  color: var(--muted); font-size: var(--fs-sm);
+}
+
+/* —— 卡片 —— */
+.nks-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: var(--sp-4);
+}
+.nks-card.flat { box-shadow: none; }
+
+/* —— 按钮 —— */
+.nks-btn {
+  height: 40px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.nks-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.nks-btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 10px 22px rgba(47, 109, 246, 0.22);
+}
+.nks-btn.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.nks-btn.ghost {
+  background: var(--primary-soft);
+  border-color: transparent;
+  color: var(--primary-ink);
+}
+.nks-btn.lg { height: 48px; font-size: 15px; padding: 0 var(--sp-4); }
+.nks-btn.block { display: flex; width: 100%; }
+
+/* —— Tag / Pill —— */
+.nks-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 24px; padding: 0 10px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  font-size: var(--fs-xs); font-weight: 600;
+}
+.nks-tag.muted { background: #EEF2F8; color: var(--muted); }
+.nks-tag.success { background: var(--success-soft); color: var(--success); }
+.nks-tag.warn { background: #FFF6DD; color: #8B6A12; }
+.nks-tag.danger { background: var(--danger-soft); color: var(--danger); }
+
+/* —— 输入框 —— */
+.nks-input, .nks-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+.nks-input:focus, .nks-textarea:focus {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+.nks-textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+
+/* —— 步骤左导航 —— */
+.nks-stepnav { display: grid; gap: var(--sp-1); }
+.nks-stepnav .item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: var(--sp-2);
+  align-items: center;
+  padding: var(--sp-2);
+  border-radius: var(--radius);
+  color: var(--muted);
+  cursor: pointer;
+}
+.nks-stepnav .item .n {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: #EEF2F8;
+  color: var(--muted);
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 13px;
+}
+.nks-stepnav .item.active {
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+}
+.nks-stepnav .item.active .n { background: var(--primary); color: #fff; }
+.nks-stepnav .item .title { font-weight: 600; color: inherit; }
+.nks-stepnav .item .sub { font-size: var(--fs-xs); color: var(--muted); margin-top: 2px; }
+
+/* —— 底部 6 步水平时间线 —— */
+.nks-timeline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.nks-timeline .step {
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.nks-timeline .step .n {
+  width: 18px; height: 18px;
+  border-radius: 999px;
+  background: #EEF2F8;
+  color: var(--muted);
+  display: grid; place-items: center;
+  font-size: 11px; font-weight: 700;
+}
+.nks-timeline .step.active { color: var(--primary-ink); font-weight: 600; }
+.nks-timeline .step.active .n { background: var(--primary); color: #fff; }
+
+/* —— 主三列布局 —— */
+.nks-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+.nks-main {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: var(--sp-4);
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 320px;
+  gap: var(--sp-3);
+}
+@media (max-width: 1100px) {
+  .nks-main { grid-template-columns: 1fr; }
+}
+
+/* —— 企业切换器（topbar 用）—— */
+.nks-company-switch {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 12px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  font-weight: 600; font-size: var(--fs-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.nks-company-switch:hover { border-color: var(--primary); }
+
+/* —— Diff 高亮（V1/V2 对比专用）—— */
+.nks-diff { background: var(--warn-soft); padding: 1px 4px; border-radius: 4px; }
+
+/* —— 动画 —— */
+@keyframes nksFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.nks-fade-up { animation: nksFadeUp .35s ease both; }
+.nks-fade-up.delay-1 { animation-delay: .08s; }
+.nks-fade-up.delay-2 { animation-delay: .16s; }
+.nks-fade-up.delay-3 { animation-delay: .24s; }
+.nks-fade-up.delay-4 { animation-delay: .32s; }
+.nks-fade-up.delay-5 { animation-delay: .40s; }
+.nks-fade-up.delay-6 { animation-delay: .48s; }
+
+@keyframes nksFlipIn {
+  from { opacity: 0; transform: rotateY(-90deg); }
+  to   { opacity: 1; transform: rotateY(0deg); }
+}
+.nks-flip-in { animation: nksFlipIn .6s ease both; transform-origin: center; }

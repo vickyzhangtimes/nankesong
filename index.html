@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>企捏捏 · 数字员工试玩台</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <style>
+    :root {
+      --blue: #2f6df6;
+      --ink: #071b4d;
+      --muted2: #687795;
+      --line2: #dbe6f7;
+      --soft: #edf4ff;
+      --green: #19b978;
+      --orange: #f0643a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(47, 109, 246, .16), transparent 28%),
+        linear-gradient(135deg, #ffffff 0%, #f2f7ff 100%);
+      color: var(--ink);
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 70px 1fr;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid rgba(47, 109, 246, .12);
+      background: rgba(255, 255, 255, .78);
+      backdrop-filter: blur(18px);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), #73a8ff);
+      box-shadow: 0 14px 28px rgba(47, 109, 246, .22);
+    }
+
+    .top-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary-ink);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .pill {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      background: var(--soft);
+      color: var(--primary-ink);
+      border: 1px solid rgba(47, 109, 246, .12);
+    }
+
+    .main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(310px, .9fr) minmax(360px, 1fr) minmax(330px, .95fr);
+      gap: 20px;
+      padding: 24px 32px 28px;
+    }
+
+    .panel {
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid rgba(47, 109, 246, .14);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, .82);
+      box-shadow: 0 24px 70px rgba(15, 39, 89, .1);
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .panel.scroll {
+      overflow: auto;
+    }
+
+    .kicker {
+      width: fit-content;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      background: var(--soft);
+      color: var(--primary-ink);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 3.3vw, 48px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.18;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted2);
+      line-height: 1.45;
+    }
+
+    .field {
+      margin-top: 13px;
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      color: var(--muted2);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--line2);
+      border-radius: 16px;
+      background: #fff;
+      padding: 0 14px;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 900;
+      outline: 0;
+    }
+
+    input:focus {
+      border-color: rgba(47, 109, 246, .52);
+      box-shadow: 0 0 0 4px rgba(47, 109, 246, .1);
+    }
+
+    .chips,
+    .roles,
+    .tasks {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chips {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 10px;
+    }
+
+    .roles {
+      margin-top: 12px;
+    }
+
+    .tasks {
+      grid-template-columns: repeat(3, 1fr);
+      margin: 14px 0;
+    }
+
+    button {
+      min-height: 42px;
+      border: 1px solid var(--line2);
+      border-radius: 16px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    button:hover,
+    button.active {
+      transform: translateY(-2px);
+      border-color: rgba(47, 109, 246, .42);
+      background: var(--soft);
+      box-shadow: 0 12px 28px rgba(47, 109, 246, .1);
+    }
+
+    .primary {
+      color: #fff;
+      background: var(--blue);
+      border-color: var(--blue);
+      box-shadow: 0 18px 36px rgba(47, 109, 246, .25);
+    }
+
+    .primary:hover {
+      background: #245de0;
+    }
+
+    .role-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      padding: 12px;
+      min-height: 72px;
+    }
+
+    .role-card span {
+      display: block;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height: 1.3;
+      margin-top: 3px;
+    }
+
+    .score {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-ink);
+      background: var(--soft);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .generate-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .hint-card {
+      display: none;
+    }
+
+    .stage {
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(47, 109, 246, .18), transparent 35%),
+        rgba(255, 255, 255, .68);
+    }
+
+    .employee-card {
+      width: min(100%, 390px);
+      min-height: 610px;
+      border-radius: 34px;
+      border: 1px solid rgba(47, 109, 246, .18);
+      background: linear-gradient(180deg, #ffffff, #edf5ff);
+      box-shadow: 0 34px 90px rgba(15, 39, 89, .16);
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto auto;
+      gap: 14px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .employee-card.pop {
+      animation: pop .46s ease both;
+    }
+
+    .rarity {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--ink), var(--blue));
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .status {
+      width: fit-content;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #e9fbf3;
+      color: #087a4a;
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .employee-name {
+      margin-top: 14px;
+      font-size: 34px;
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .employee-desc {
+      color: var(--muted2);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .avatar-wrap {
+      display: grid;
+      place-items: center;
+      min-height: 230px;
+    }
+
+    .avatar-wrap img {
+      max-width: 220px;
+      max-height: 250px;
+      object-fit: contain;
+      filter: drop-shadow(0 22px 28px rgba(15, 39, 89, .18));
+    }
+
+    .bars {
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .74);
+      border: 1px solid rgba(47, 109, 246, .14);
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: 70px 1fr 32px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .track {
+      height: 8px;
+      border-radius: 999px;
+      background: #dfe9fb;
+      overflow: hidden;
+    }
+
+    .track span {
+      display: block;
+      height: 100%;
+      width: var(--w, 0%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width .45s ease;
+    }
+
+    .safe {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .safe div {
+      min-height: 52px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid rgba(47, 109, 246, .14);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tap {
+      color: var(--primary-ink);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .workbench {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+    }
+
+    .agent-line {
+      padding: 14px;
+      border-radius: 18px;
+      background: var(--soft);
+      border: 1px solid rgba(47, 109, 246, .14);
+      color: var(--muted2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .log {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-height: 210px;
+    }
+
+    .log-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--line2);
+      background: #fff;
+      color: var(--muted2);
+      opacity: .42;
+      transform: translateY(6px);
+      transition: opacity .22s ease, transform .22s ease;
+    }
+
+    .log-item.done {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .log b {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .result {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .result.show {
+      display: grid;
+      animation: rise .28s ease both;
+    }
+
+    .metric {
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line2);
+    }
+
+    .metric b {
+      display: block;
+      font-size: 25px;
+      margin-bottom: 5px;
+    }
+
+    .review {
+      display: none;
+      gap: 10px;
+      align-items: center;
+      grid-template-columns: 1fr auto auto;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--soft), #fff);
+      border: 1px solid rgba(47, 109, 246, .18);
+    }
+
+    .review.show {
+      display: grid;
+      animation: rise .28s ease both;
+    }
+
+    .review b {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .review span {
+      color: var(--muted2);
+      font-size: 13px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      top: 86px;
+      z-index: 30;
+      min-width: 280px;
+      border-radius: 18px;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid rgba(47, 109, 246, .18);
+      box-shadow: 0 18px 48px rgba(15, 39, 89, .16);
+      padding: 14px 16px;
+      font-weight: 900;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes pop {
+      0% { opacity: .3; transform: translateY(18px) scale(.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1060px) {
+      body { overflow: auto; }
+      .app { height: auto; min-height: 100vh; }
+      .topbar { position: sticky; top: 0; }
+      .main {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+      .panel { overflow: visible; }
+      .employee-card { min-height: auto; margin: 0 auto; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { padding: 0 16px; }
+      .top-status .pill:first-child { display: none; }
+      .main { padding: 14px; gap: 14px; }
+      .panel { padding: 16px; border-radius: 24px; }
+      h1 { font-size: 38px; }
+      .chips,
+      .tasks,
+      .result,
+      .safe,
+      .review.show,
+      .generate-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">A</div>
+        <div>企捏捏 <span style="color:var(--muted2);font-weight:800;">Agentry</span></div>
+      </div>
+      <div class="top-status">
+        <span class="pill" id="flowStatus">试玩台</span>
+        <button id="resetBtn">重来</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="panel scroll">
+        <div class="kicker">给企业主玩的 60 秒体验</div>
+        <h1>先捏一个<br />能干活的员工。</h1>
+        <p>不用先懂 Agent。填一个名字，选今天最想解决的问题，马上生成一张数字员工卡。</p>
+
+        <div class="field">
+          <label for="userName">你的名字</label>
+          <input id="userName" value="林蔷" />
+        </div>
+
+        <div class="field">
+          <label>今天最想先解决</label>
+          <div class="chips">
+            <button class="active" data-goal="省时间">省时间</button>
+            <button data-goal="少出错">少出错</button>
+            <button data-goal="沉淀规则">沉淀规则</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>选择你的企业状态</label>
+          <div class="roles">
+            <button class="role-card active" data-profile="lin">
+              <div><b>资料太乱的老板</b><span>手写、微信群、Excel 都要整理成表。</span></div>
+              <div class="score">92</div>
+            </button>
+            <button class="role-card" data-profile="zhou">
+              <div><b>活动运营主理人</b><span>报名、通知、名单核对总是来回补。</span></div>
+              <div class="score">88</div>
+            </button>
+            <button class="role-card" data-profile="chen">
+              <div><b>个人工作室老板</b><span>客户需求散，交付靠自己反复记。</span></div>
+              <div class="score">96</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="generate-row">
+          <button class="primary" id="generateBtn">生成我的数字员工</button>
+          <button id="randomBtn">随机试试</button>
+        </div>
+
+        <div class="hint-card" id="hintText">企捏捏会先生成一份你的工作记忆，再把它交给数字员工读取。</div>
+      </section>
+
+      <section class="panel stage">
+        <article class="employee-card" id="employeeCard">
+          <div class="rarity" id="rarity">SR · 待生成</div>
+          <div>
+            <div class="status" id="cardStatus">等待生成</div>
+            <div class="employee-name" id="employeeName">你的数字员工</div>
+            <p class="employee-desc" id="employeeDesc">先在左边选一个企业状态，再生成员工卡。</p>
+          </div>
+
+          <div class="avatar-wrap">
+            <img id="avatar" src="./assets/avatars/ops.png" alt="数字员工头像" />
+          </div>
+
+          <div class="bars">
+            <div class="bar"><span>执行力</span><div class="track"><span id="barExec"></span></div><b id="barExecText">0</b></div>
+            <div class="bar"><span>耐心值</span><div class="track"><span id="barCare"></span></div><b id="barCareText">0</b></div>
+            <div class="bar"><span>成长性</span><div class="track"><span id="barGrow"></span></div><b id="barGrowText">0</b></div>
+          </div>
+
+          <div class="safe">
+            <div>先读记忆</div>
+            <div>关键会问</div>
+            <div>错了能教</div>
+          </div>
+
+          <div class="tap" id="tapHint">点卡片加默契值</div>
+        </article>
+      </section>
+
+      <section class="panel workbench">
+        <div>
+          <div class="kicker">交给它一件事</div>
+          <h2 id="workTitle">员工工作台</h2>
+          <p class="agent-line" id="agentLine">生成员工后，这里会出现它能做的第一件事。</p>
+        </div>
+
+        <div class="tasks">
+          <button class="active" data-task="整理资料">整理资料</button>
+          <button data-task="写确认消息">写消息</button>
+          <button data-task="查漏补缺">查漏补缺</button>
+        </div>
+
+        <div class="log">
+          <div class="log-item"><div class="num">1</div><div><b>读取你的记忆</b><span>先看身份、资料来源、偏好和红线。</span></div></div>
+          <div class="log-item"><div class="num">2</div><div><b>处理混乱输入</b><span>把聊天、表格和手写信息整理成结构。</span></div></div>
+          <div class="log-item"><div class="num">3</div><div><b>标出不确定</b><span>不硬猜，先交给你确认。</span></div></div>
+          <div class="log-item"><div class="num">4</div><div><b>输出结果</b><span>给你可采纳、可纠错的交付物。</span></div></div>
+        </div>
+
+        <div class="result" id="result">
+          <div class="metric"><b id="m1">0</b><span>整理记录</span></div>
+          <div class="metric"><b id="m2">0</b><span>需要确认</span></div>
+          <div class="metric"><b id="m3">0</b><span>沉淀规则</span></div>
+        </div>
+
+        <div class="review" id="review">
+          <div><b>老板验收</b><span id="reviewText">结果出来后，可以采纳，也可以圈错教它。</span></div>
+          <button class="primary" id="acceptBtn">采纳</button>
+          <button id="correctBtn">圈错</button>
+        </div>
+
+        <button class="primary" id="runBtn">先生成员工</button>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">已更新</div>
+
+  <script>
+    const profiles = {
+      lin: {
+        user: '林蔷',
+        agent: '龙虾',
+        role: '尺码整理员工',
+        avatar: './assets/avatars/ops.png',
+        rarity: 'SR · 流程整理型',
+        desc: '负责把手写表、微信群消息和乱 Excel 整理成标准表，并把不确定的地方交给你确认。',
+        line: '它最适合先做尺码建档、异常识别和家长确认消息。',
+        metrics: ['720 行', '11 条', '5 条'],
+        traits: [88, 92, 80],
+      },
+      zhou: {
+        user: '周然',
+        agent: '小舟',
+        role: '报名通知员工',
+        avatar: './assets/avatars/mkt.png',
+        rarity: 'SR · 活动运营型',
+        desc: '负责整理报名名单、发现缺失信息、生成通知话术，并提醒你确认关键事项。',
+        line: '它最适合先做报名名单清理、通知草稿和到场提醒。',
+        metrics: ['186 人', '9 条', '4 条'],
+        traits: [84, 78, 90],
+      },
+      chen: {
+        user: '陈一',
+        agent: '一一',
+        role: '交付助理员工',
+        avatar: './assets/avatars/hr.png',
+        rarity: 'SSR · 个人助理型',
+        desc: '负责整理客户需求、拆成交付清单、生成初版回复，并把复盘写回你的工作记忆。',
+        line: '它最适合先做客户需求整理、交付清单和今日待确认事项。',
+        metrics: ['24 项', '3 件', '6 条'],
+        traits: [80, 86, 94],
+      },
+    };
+
+    const state = {
+      profile: 'lin',
+      goal: '省时间',
+      task: '整理资料',
+      born: false,
+      trust: 0,
+      running: false,
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const toast = $('toast');
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(showToast.t);
+      showToast.t = setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function setBar(id, value) {
+      $(`bar${id}`).style.setProperty('--w', `${value}%`);
+      $(`bar${id}Text`).textContent = value;
+    }
+
+    function current() {
+      return profiles[state.profile];
+    }
+
+    function resetWork() {
+      document.querySelectorAll('.log-item').forEach(item => item.classList.remove('done'));
+      $('result').classList.remove('show');
+      $('review').classList.remove('show');
+      $('runBtn').textContent = state.born ? `交办：${state.task}` : '先生成员工';
+    }
+
+    function selectProfile(key) {
+      state.profile = key;
+      const profile = current();
+      $('userName').value = profile.user;
+      document.querySelectorAll('[data-profile]').forEach(btn => btn.classList.toggle('active', btn.dataset.profile === key));
+      $('hintText').textContent = `${profile.user} 今天想先${state.goal}，推荐生成「${profile.role}」。`;
+      if (!state.born) {
+        $('employeeName').textContent = '你的数字员工';
+        $('employeeDesc').textContent = '选好了，点一下生成员工卡。';
+      }
+      resetWork();
+    }
+
+    function generate() {
+      const profile = current();
+      const user = $('userName').value.trim() || profile.user;
+      state.born = true;
+      state.trust = 0;
+      $('cardStatus').textContent = '已入职';
+      $('rarity').textContent = profile.rarity;
+      $('employeeName').textContent = `${profile.agent} · ${profile.role}`;
+      $('employeeDesc').textContent = `${user} 的数字员工，会优先帮你${state.goal}。${profile.desc}`;
+      $('avatar').src = profile.avatar;
+      $('agentLine').textContent = profile.line;
+      $('workTitle').textContent = `${profile.role}工作台`;
+      $('flowStatus').textContent = `${user} 的员工已生成`;
+      setBar('Exec', profile.traits[0]);
+      setBar('Care', profile.traits[1]);
+      setBar('Grow', profile.traits[2]);
+      $('tapHint').textContent = '点卡片加默契值';
+      $('employeeCard').classList.remove('pop');
+      void $('employeeCard').offsetWidth;
+      $('employeeCard').classList.add('pop');
+      resetWork();
+      showToast('数字员工已生成');
+    }
+
+    async function runTask() {
+      if (!state.born) {
+        generate();
+      }
+      if (state.running) return;
+      state.running = true;
+      resetWork();
+      $('runBtn').textContent = '正在处理...';
+      const items = Array.from(document.querySelectorAll('.log-item'));
+      for (const item of items) {
+        await new Promise(resolve => setTimeout(resolve, 380));
+        item.classList.add('done');
+      }
+      const profile = current();
+      $('m1').textContent = profile.metrics[0];
+      $('m2').textContent = state.goal === '少出错' ? profile.metrics[1] : profile.metrics[1];
+      $('m3').textContent = profile.metrics[2];
+      $('result').classList.add('show');
+      $('review').classList.add('show');
+      $('reviewText').textContent = state.goal === '沉淀规则'
+        ? '这次交付可以保存为下次规则，也可以先圈错修正。'
+        : state.goal === '少出错'
+          ? '我把不确定的地方拎出来了，建议你先验收。'
+          : '重复整理已完成，可以采纳，也可以圈错教它。';
+      $('runBtn').textContent = `再做一次：${state.task}`;
+      state.running = false;
+      showToast('任务完成，等你验收');
+    }
+
+    document.querySelectorAll('[data-goal]').forEach(btn => {
+      btn.onclick = () => {
+        state.goal = btn.dataset.goal;
+        document.querySelectorAll('[data-goal]').forEach(item => item.classList.toggle('active', item === btn));
+        $('hintText').textContent = `${current().user} 今天想先${state.goal}，推荐生成「${current().role}」。`;
+        if (state.born) generate();
+        showToast(`目标切换为：${state.goal}`);
+      };
+    });
+
+    document.querySelectorAll('[data-profile]').forEach(btn => {
+      btn.onclick = () => selectProfile(btn.dataset.profile);
+    });
+
+    document.querySelectorAll('[data-task]').forEach(btn => {
+      btn.onclick = () => {
+        state.task = btn.dataset.task;
+        document.querySelectorAll('[data-task]').forEach(item => item.classList.toggle('active', item === btn));
+        resetWork();
+        showToast(`准备交办：${state.task}`);
+      };
+    });
+
+    $('generateBtn').onclick = generate;
+    $('randomBtn').onclick = () => {
+      const keys = Object.keys(profiles);
+      const next = keys[(keys.indexOf(state.profile) + 1) % keys.length];
+      selectProfile(next);
+      showToast('已换一个身份');
+    };
+    $('runBtn').onclick = runTask;
+    $('acceptBtn').onclick = () => {
+      $('reviewText').textContent = '已采纳，这次交付会成为员工的成功样本。';
+      showToast('已采纳');
+    };
+    $('correctBtn').onclick = () => {
+      $('reviewText').textContent = '已圈错，员工会把这次纠正规则写回记忆。';
+      $('cardStatus').textContent = '进化到 v2';
+      $('tapHint').textContent = '已学会新规则';
+      showToast('已写回 Memory v2');
+    };
+    $('employeeCard').onclick = () => {
+      if (!state.born) generate();
+      state.trust = Math.min(6, state.trust + 1);
+      const profile = current();
+      setBar('Exec', Math.min(99, profile.traits[0] + state.trust));
+      setBar('Care', Math.min(99, profile.traits[1] + state.trust));
+      setBar('Grow', Math.min(99, profile.traits[2] + state.trust));
+      $('tapHint').textContent = state.trust >= 3 ? '默契值已提升' : `默契值 +${state.trust}`;
+      showToast('员工回应了你');
+    };
+    $('resetBtn').onclick = () => location.reload();
+
+    selectProfile('lin');
+  </script>
+</body>
+</html>
