@@ -1,0 +1,385 @@
+/* ── 出生遮罩 ── */
+    .birth-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      display: grid; place-items: center; padding: 24px;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(47,109,246,.18), transparent 34%),
+        rgba(245,248,254,.96);
+      backdrop-filter: blur(18px);
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+    .birth-overlay.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+    .birth-panel {
+      width: min(560px, 100%); padding: 34px;
+      display: grid; gap: 22px; text-align: center;
+      border-radius: 28px; border: 1px solid rgba(47,109,246,.18);
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 28px 80px rgba(21,49,89,.16);
+      animation: birthPanelIn .45s ease both;
+    }
+    .birth-orbit {
+      width: 96px; height: 96px; margin: 0 auto;
+      position: relative; display: grid; place-items: center;
+      border-radius: 999px; color: #fff;
+      background: linear-gradient(135deg, var(--primary), #5E9CFF);
+      box-shadow: 0 18px 42px rgba(47,109,246,.32);
+      font-size: 38px; font-weight: 900;
+    }
+    .birth-orbit::before, .birth-orbit::after {
+      content: ""; position: absolute; inset: -14px;
+      border: 1px solid rgba(47,109,246,.24); border-radius: inherit;
+      animation: birthOrbit 1.5s linear infinite;
+    }
+    .birth-orbit::after { inset: -26px; animation-duration: 2.1s; animation-direction: reverse; }
+    .birth-panel h2 { margin: 0; font-size: 28px; color: var(--ink); }
+    .birth-panel p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+    .birth-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    }
+    .birth-steps div {
+      min-height: 44px; display: grid; place-items: center;
+      padding: 8px; border-radius: 14px; border: 1px solid var(--line);
+      color: var(--muted); background: var(--surface-2);
+      font-size: 13px; font-weight: 700;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+    .birth-steps div.active { color: var(--primary-ink); background: var(--primary-soft); border-color: #cfe0ff; transform: translateY(-2px); }
+
+    /* ── 页面壳 ── */
+    .bc-app { min-height: 100vh; display: block; padding-bottom: 24px; }
+    body.birthing .bc-app { opacity: 1; transform: none; pointer-events: auto; }
+    body.birth-ready .bc-app { animation: none; opacity: 1; transform: none; }
+
+    /* ── 主内容区（双栏：左 sidebar 240 + 右内容） ── */
+    .bc-main {
+      width: min(1400px, 100%); margin: 0 auto;
+      padding: var(--sp-4);
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: var(--sp-4);
+      align-items: start;
+      overflow: visible;
+    }
+    .bc-content { display: grid; gap: var(--sp-3); min-width: 0; }
+    @media (max-width: 1180px) {
+      .bc-main { grid-template-columns: 1fr; }
+      .bc-main > .nks-sidebar { display: none; }
+    }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; }
+    .page-header h1 { font-size: var(--fs-h1); margin: 0; }
+    .page-header p { color: var(--muted); margin-top: 4px; font-size: var(--fs-sm); }
+
+    /* ── 双栏布局 ── */
+    .proof-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+      gap: var(--sp-3); align-items: stretch;
+    }
+
+    /* ── 左侧员工卡 ── */
+    .employee-card {
+      position: relative; border-radius: 24px; overflow: hidden;
+      border: 1px solid var(--line); background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow);
+      display: grid; grid-template-rows: auto 1fr auto;
+      animation: none;
+    }
+    .employee-card::before {
+      content: ""; position: absolute; left: 28px; right: 28px; top: 155px; height: 220px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--role-main, var(--primary)), white 70%);
+      filter: blur(2px); opacity: .75;
+    }
+    .employee-head { position: relative; z-index: 1; padding: 18px 18px 0; display: grid; gap: 10px; }
+    .proof-badge {
+      width: fit-content; display: inline-flex; align-items: center;
+      min-height: 32px; padding: 0 12px; border-radius: 999px;
+      background: var(--primary-soft); color: var(--primary-ink);
+      font-size: 13px; font-weight: 700;
+    }
+    .employee-name {
+      color: var(--ink); font-size: clamp(22px, 2.5vw, 30px);
+      line-height: 1.15; font-weight: 700;
+    }
+    .code-row {
+      width: fit-content; min-height: 32px;
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 0 11px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--surface-2);
+      color: var(--muted); font-size: 12px; font-weight: 700;
+    }
+    .code-row b { color: var(--role-main, var(--primary)); font-size: 16px; font-weight: 900; }
+    .status-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .status-pill {
+      min-height: 28px; display: inline-flex; align-items: center;
+      padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      color: var(--role-main, var(--primary));
+      background: color-mix(in srgb, var(--role-main, var(--primary)), white 82%);
+    }
+    .image-stage {
+      position: relative; z-index: 1; min-height: 250px;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 0 12px; overflow: hidden;
+    }
+    .employee-img {
+      width: min(240px, 100%); max-height: 290px;
+      object-fit: contain; object-position: bottom center;
+      filter: drop-shadow(0 24px 26px rgba(32,62,77,.18));
+    }
+    .org-grid {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0 14px 14px; overflow: hidden;
+      border-radius: 18px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.9);
+    }
+    .org-cell {
+      min-height: 58px; display: grid; align-content: center;
+      gap: 4px; padding: 10px 12px;
+      border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .org-cell:nth-child(2n) { border-right: 0; }
+    .org-cell:nth-last-child(-n+2) { border-bottom: 0; }
+    .org-cell small { color: var(--muted); font-size: 12px; font-weight: 700; }
+    .org-cell b { color: var(--ink); font-size: 15px; }
+
+    /* ── 右侧确认卡 ── */
+    .proof-card {
+      border-radius: 24px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.92); box-shadow: var(--shadow);
+      padding: var(--sp-3); display: grid;
+      grid-template-rows: auto auto 1fr; gap: var(--sp-3);
+      animation: none;
+    }
+    .hero-copy {
+      padding: var(--sp-3) var(--sp-4); border-radius: 18px;
+      background: linear-gradient(135deg, #fff, var(--surface-2));
+      border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+    }
+    .hero-copy h2 {
+      margin: 0; color: var(--ink); font-size: clamp(20px, 2.6vw, 30px);
+      line-height: 1.15; font-weight: 700;
+    }
+    .hero-copy h2 .accent { color: var(--role-main, var(--primary)); }
+    .hero-copy p { margin: 8px 0 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+    .task-hero {
+      padding: var(--sp-3) var(--sp-4); border-radius: 18px;
+      border: 1px solid color-mix(in srgb, var(--role-main, var(--primary)), white 68%);
+      background: linear-gradient(135deg, color-mix(in srgb, var(--role-main, var(--primary)), white 90%), #fff 72%);
+      box-shadow: 0 18px 38px rgba(18,41,74,.08);
+    }
+    .task-hero-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+    .task-hero-head span {
+      min-height: 24px; display: inline-flex; align-items: center; padding: 0 9px;
+      border-radius: 999px; background: rgba(255,255,255,.72);
+      color: var(--muted); font-size: 12px; font-weight: 700;
+    }
+    .task-hero-head b { color: var(--ink); font-size: 22px; font-weight: 700; }
+    .task-list-primary {
+      margin: 0; padding: 0; list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: 10px;
+    }
+    .task-list-primary li {
+      position: relative; min-height: 52px;
+      display: flex; align-items: center;
+      padding: 9px 12px 9px 34px;
+      border-radius: 14px;
+      border: 1px solid color-mix(in srgb, var(--role-main, var(--primary)), white 62%);
+      background: rgba(255,255,255,.82); color: var(--ink);
+      font-size: 15px; font-weight: 700; box-shadow: var(--shadow-sm);
+    }
+    .task-list-primary li::before {
+      content: ""; position: absolute; left: 12px; top: 50%; width: 11px; height: 11px;
+      transform: translateY(-50%); border-radius: 999px;
+      background: var(--role-main, var(--primary));
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--role-main, var(--primary)), white 82%);
+    }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: 12px;
+    }
+    .module { min-height: 160px; padding: var(--sp-3); border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+    .module h3 { margin: 0 0 12px; display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 15px; }
+    .module-icon {
+      width: 28px; height: 28px; display: grid; place-items: center;
+      border-radius: 9px; color: var(--primary); background: var(--primary-soft);
+      font-size: 13px; font-weight: 900;
+    }
+    .mlist { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    .mlist li {
+      position: relative; padding-left: 24px;
+      color: var(--text); font-size: var(--fs-sm); line-height: 1.4;
+    }
+    .mlist li::before {
+      content: ""; position: absolute; left: 2px; top: 4px;
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid var(--role-main, var(--primary)); background: #fff;
+    }
+    .mlist.no li::before { border-color: var(--muted); background: var(--surface-2); }
+
+    /* ── 底部操作栏 ── */
+    .bc-bottombar {
+      width: min(1400px, calc(100% - 48px));
+      margin: 0 auto 24px;
+      min-height: 72px; display: flex; align-items: center;
+      justify-content: space-between; gap: var(--sp-3);
+      padding: 12px 32px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 18px 46px rgba(28,55,103,.09);
+    }
+    .bc-bottombar span { color: var(--muted); font-size: var(--fs-sm); }
+    .bottom-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+    .bottom-actions .nks-btn.primary { font-size: 15px; padding: 10px 20px; box-shadow: 0 4px 12px rgba(99,102,241,.25); }
+    body { padding-bottom: 0; }
+
+    /* ── 动画 ── */
+    @keyframes birthPanelIn { from{opacity:0;transform:translateY(12px) scale(.98)} to{opacity:1;transform:none} }
+    @keyframes birthOrbit { to{transform:rotate(360deg) scale(1.02)} }
+    @keyframes proofPageIn { from{opacity:0;transform:translateY(10px) scale(.99)} to{opacity:1;transform:none} }
+    @keyframes proofCardIn { from{opacity:0;transform:rotateY(-10deg) translateY(14px)} to{opacity:1;transform:none} }
+
+    @media(max-width:900px) {
+      .proof-layout{grid-template-columns:1fr}
+      .module-grid{grid-template-columns:1fr}
+      .task-list-primary{grid-template-columns:1fr}
+    }
+
+    @media(max-width:720px) {
+      .bc-app {
+        padding-bottom: 12px;
+      }
+
+      .bc-main {
+        padding: 22px 12px 0;
+        gap: 14px;
+      }
+
+      .page-header h1 {
+        font-size: 26px;
+        line-height: 1.18;
+      }
+
+      .page-header p {
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .proof-layout {
+        gap: 12px;
+      }
+
+      .employee-card,
+      .proof-card {
+        border-radius: 18px;
+      }
+
+      .employee-head {
+        padding: 14px 14px 0;
+        gap: 8px;
+      }
+
+      .proof-badge {
+        min-height: 28px;
+        font-size: 12px;
+      }
+
+      .employee-name {
+        font-size: 23px;
+      }
+
+      .status-pill {
+        min-height: 25px;
+        padding: 0 8px;
+        font-size: 11px;
+      }
+
+      .employee-card::before {
+        top: 150px;
+        height: 180px;
+        left: 34px;
+        right: 34px;
+      }
+
+      .image-stage {
+        min-height: 190px;
+        padding: 0 8px;
+      }
+
+      .employee-img {
+        width: min(190px, 74%);
+        max-height: 220px;
+      }
+
+      .org-grid {
+        margin: 0 12px 12px;
+        border-radius: 14px;
+      }
+
+      .org-cell {
+        min-height: 48px;
+        padding: 8px 10px;
+      }
+
+      .org-cell small {
+        font-size: 11px;
+      }
+
+      .org-cell b {
+        font-size: 13px;
+      }
+
+      .hero-copy,
+      .task-hero,
+      .module {
+        padding: 14px;
+        border-radius: 14px;
+      }
+
+      .task-hero-head b {
+        font-size: 18px;
+      }
+
+      .task-list-primary li {
+        min-height: 46px;
+        font-size: 13px;
+      }
+
+      .bc-bottombar {
+        min-height: 0;
+        display: grid;
+        gap: 10px;
+        width: calc(100% - 24px);
+        margin-bottom: 12px;
+        padding: 10px 12px 12px;
+      }
+
+      .bc-bottombar span {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .bottom-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .bottom-actions .nks-btn {
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        padding: 0 10px;
+        font-size: 13px;
+      }
+
+      .bottom-actions .nks-btn.primary {
+        grid-column: 1 / -1;
+        font-size: 14px;
+      }
+    }

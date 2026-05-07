@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · Agent 员工</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell">
+    <header id="nks-topbar"></header>
+
+    <main class="nks-main">
+      <aside id="nks-sidebar" class="nks-sidebar"></aside>
+
+      <section class="nks-content">
+        <div class="nks-page-head">
+          <div class="nks-page-title">
+            <h1>Agent 员工配置</h1>
+            <p>配置 AI 员工与技能，组建团队，为后续执行做准备。</p>
+          </div>
+        </div>
+
+        <div class="employee-layout">
+          <div class="employee-main">
+            <section class="nks-card employee-card nks-fade-up">
+              <div class="employee-header">
+                <div class="employee-avatar" id="employee-avatar"></div>
+                <div class="employee-info">
+                  <div class="employee-name" id="employee-name"></div>
+                  <div class="nks-tag-row">
+                    <span class="nks-pill" id="employee-id"></span>
+                    <span class="nks-pill success" id="employee-status"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="employee-role" id="employee-role"></div>
+              <div class="employee-department" id="employee-department"></div>
+              <div class="nks-actions" style="margin-top: 0;">
+                <button class="nks-btn secondary" id="edit-employee" type="button">编辑资料</button>
+              </div>
+            </section>
+
+            <section class="nks-card employee-details nks-fade-up delay-1">
+              <div class="detail-section">
+                <div class="detail-title">核心职责</div>
+                <ul class="responsibilities-list" id="responsibilities-list"></ul>
+              </div>
+
+              <div class="detail-section">
+                <div class="detail-title">人格设定</div>
+                <div class="persona-line" id="persona-line"></div>
+              </div>
+
+              <div class="detail-section">
+                <div class="detail-title">记忆读取状态</div>
+                <div class="memory-status" id="memory-status"></div>
+                <div class="memory-items" id="memory-items"></div>
+              </div>
+            </section>
+
+            <div class="bottom-bar">
+              <div class="bottom-hint" id="bottom-hint"></div>
+              <div class="nks-actions" style="margin-top: 0;">
+                <button class="nks-btn secondary" id="back-btn" type="button">返回</button>
+                <button class="nks-btn primary" id="continue-btn" type="button">完成配置</button>
+              </div>
+            </div>
+            <div class="status-line nks-small" id="page-status"></div>
+          </div>
+
+          <aside class="nks-rail nks-fade-up delay-2">
+            <div class="nks-card">
+              <h2>上下文</h2>
+              <div id="context-list"></div>
+              <p class="nks-muted" style="font-size:12px;margin-top:var(--sp-2);" id="context-hint"></p>
+            </div>
+            <nav class="nks-flow-strip" style="border:none;padding:0;background:transparent;">
+              <a href="../agent-birth-card/index.html">← 诞生卡</a>
+              <a href="../job-agent-workbench-prototype/index.html">工作台 →</a>
+            </nav>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer id="nks-timeline"></footer>
+  </div>
+
+    <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

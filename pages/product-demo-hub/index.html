@@ -1,0 +1,104 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentry · 企捏捏</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="hub-layout">
+  <div class="hub-main home">
+
+    <!-- 1. 问候 -->
+    <section class="greet">
+      <h1 id="greet-title">下午好，张小北</h1>
+      <p class="sub">
+        你的 AI 员工今天替你完成了 <b id="done-count">—</b> 件事 ·
+        当前公司 <b id="company-name">—</b>
+      </p>
+    </section>
+
+    <!-- 2. 召唤卡（唯一主入口） -->
+    <section class="summon">
+      <div>
+        <div class="badge">
+          <span style="width:6px;height:6px;border-radius:999px;background:var(--primary);"></span>
+          一条来自你昨天会议的待处理事项
+        </div>
+        <h2 id="demand-title">—</h2>
+        <div class="quote" id="demand-excerpt">—</div>
+        <div class="meta">
+          来源：<b>当前任务资料 · AI 岗位交流会议-逐字稿.docx</b> · 还没人接
+        </div>
+      </div>
+      <div>
+        <button id="btn-summon" class="nks-btn primary lg" style="white-space:nowrap;border:none;cursor:pointer;">
+          让 AI 替我处理 →
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. 已雇佣员工 -->
+    <section>
+      <div class="roster-head">
+        <h3>你已经雇佣的 AI 员工</h3>
+        <div class="more">
+          共 <b id="emp-count">—</b> 位 ·
+          <a href="../ai-employee-roster/index.html">查看全部 →</a>
+        </div>
+      </div>
+      <div class="roster" id="roster"></div>
+    </section>
+
+  </div>
+
+  <aside class="nks-rail">
+    <div class="nks-card">
+      <h2>主流程</h2>
+      <div class="ctx-row"><span class="label">1</span><span class="value"><a href="../company-onboarding/index.html">创建企业</a></span></div>
+      <div class="ctx-row"><span class="label">2</span><span class="value"><a href="../enterprise-memory/index.html">企业记忆</a></span></div>
+      <div class="ctx-row"><span class="label">3</span><span class="value"><a href="../demand-diagnosis/index.html">需求诊断</a></span></div>
+      <div class="ctx-row"><span class="label">4</span><span class="value"><a href="../job-agent-workbench-prototype/index.html">工作台</a></span></div>
+      <div class="ctx-row"><span class="label">5</span><span class="value"><a href="../ai-employee-roster/index.html">员工仓库</a></span></div>
+      <div class="ctx-row"><span class="label">6</span><span class="value"><a href="../feedback-evolution/index.html">反馈迭代</a></span></div>
+    </div>
+    <div class="nks-card">
+      <h2>快捷操作</h2>
+      <a class="nks-btn secondary block" href="../ai-employee-roster/index.html" style="margin-bottom:8px;text-align:center;">员工仓库</a>
+      <button type="button" class="nks-btn primary block" id="btn-open-diag">本页快速诊断</button>
+    </div>
+  </aside>
+  </div>
+
+  <!-- 诊断 Modal -->
+  <div class="nks-modal-mask" id="diag-mask">
+    <div class="nks-modal" id="diag-modal" role="dialog" aria-labelledby="diag-title">
+      <h2 id="diag-title">AI 正在为你诊断需求</h2>
+      <div class="src">来源：<b id="diag-source">—</b> · 模型：<b>StepFun</b></div>
+      <div id="diag-body">
+        <div class="nks-loading">
+          <div class="nks-spinner"></div>
+          <span>读取企业身份证 · 路由判断 · 生成七层骨架（约 10 ~ 20 秒）…</span>
+        </div>
+      </div>
+      <div class="modal-foot" style="margin-top: var(--sp-3);">
+        <span class="pill" id="diag-mem-pill" style="visibility:hidden;">✓ 已读取 6 条企业记忆</span>
+        <div style="display:flex;gap:8px;">
+          <button class="nks-btn" id="diag-close">关闭</button>
+          <a class="nks-btn primary" id="diag-continue" href="../demand-diagnosis/index.html" style="display:none;">进入正式诊断页 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script src="../../assets/llm-config.js"></script>
+  <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="../../assets/llm.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

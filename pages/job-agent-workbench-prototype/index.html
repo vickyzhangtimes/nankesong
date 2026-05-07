@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>员工工作台 · 派任务 · 看 V1</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="nks-shell">
+    <header id="nks-topbar"></header>
+
+    <main class="wb-main">
+      <!-- 左：可交办任务列表 -->
+      <aside class="wb-tasks">
+        <div class="wb-employee-strip">
+          <div class="wb-emp-avatar">🥔</div>
+          <div class="wb-emp-meta">
+            <div class="wb-emp-name" id="empName">小薯</div>
+            <div class="wb-emp-title" id="empTitle">ToB 内容增长专员</div>
+          </div>
+          <span class="wb-emp-status" id="empStatus">V1 · 试运行</span>
+        </div>
+        <div class="wb-tasks-head">
+          <span class="wb-tasks-label">可交办任务</span>
+          <span class="wb-tasks-count" id="taskTotal">4</span>
+        </div>
+        <ul class="wb-task-list" id="taskList"></ul>
+        <div class="wb-tasks-foot">
+          <p class="wb-task-hint">不同员工的可交办任务不一样。点击任务可在右侧查看执行细节，本次 Demo 只演示「多平台改写」。</p>
+        </div>
+      </aside>
+
+      <!-- 中：当前任务执行 + 产物 -->
+      <section class="wb-center">
+        <div class="wb-runtime-bar">
+          <div class="wb-runtime-left">
+            <span class="wb-runtime-title" id="currentTaskTitle">多平台改写</span>
+            <span class="wb-runtime-sub" id="currentTaskSub">英文技术稿 → 4 个平台 V1</span>
+          </div>
+          <div class="wb-runtime-right">
+            <label class="wb-mode active">
+              <input type="radio" name="runtime-mode" value="cloud" checked />
+              <span>云端模式</span>
+            </label>
+            <label class="wb-mode">
+              <input type="radio" name="runtime-mode" value="local" />
+              <span>本地模式</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="wb-card wb-exec-card">
+          <div class="wb-card-head">
+            <h2>执行步骤</h2>
+            <span class="nks-tag" id="execStatus">就绪</span>
+          </div>
+          <ol class="wb-step-list" id="execSteps">
+            <li><span class="step-dot"></span><div><b>读取需求与材料</b><small>英文技术稿《Vehicle Bus Test Toolchain v3》、市场部库历史 32 篇</small></div></li>
+            <li><span class="step-dot"></span><div><b>调用岗位骨架与红线</b><small>读取 5 条已沉淀规则、3 条红线</small></div></li>
+            <li><span class="step-dot"></span><div><b>生成 V1 多平台产物</b><small>公众号 / 知乎 / LinkedIn / 小红书</small></div></li>
+            <li><span class="step-dot"></span><div><b>标记需复核段落，等待反馈</b><small>下一步进入「反馈进化」由人审改</small></div></li>
+          </ol>
+          <div class="wb-exec-actions">
+            <button class="nks-btn primary lg" id="runTaskBtn" type="button">开始执行 →</button>
+            <span class="muted" id="runHint">点击后会跑一段轻动效，在产物预览区生成 V1 摘要</span>
+          </div>
+        </div>
+
+        <div class="wb-card wb-deliv-card" id="deliveryCard" hidden>
+          <div class="wb-card-head">
+            <h2>产物预览（V1）</h2>
+            <span class="nks-tag success">已生成</span>
+          </div>
+          <div class="wb-deliv-grid" id="deliveryGrid"></div>
+          <div class="wb-deliv-actions" id="deliveryActions">
+            <button class="nks-btn small" id="viewFullBtn" type="button">查看全文</button>
+            <button class="nks-btn small" id="downloadBtn" type="button">下载（.zip）</button>
+            <button class="nks-btn small" id="copyAllBtn" type="button">复制全部</button>
+            <span class="muted wb-deliv-actions-hint">点「完成本次任务，进入反馈进化 →」给小薯写反馈，把意见变成下次的规则</span>
+          </div>
+          <div class="wb-deliv-foot">
+            <span class="muted">这只是 V1。下一步把人工反馈写进规则库后，V2 会更专业。</span>
+            <a class="nks-btn primary" href="../feedback-evolution/index.html" id="goFeedbackBtn">完成本次任务，进入反馈进化 →</a>
+          </div>
+        </div>
+
+        <!-- 全文查看抽屉 -->
+        <div class="wb-drawer" id="fullDrawer" hidden>
+          <div class="wb-drawer-mask" data-close="1"></div>
+          <div class="wb-drawer-panel">
+            <header class="wb-drawer-head">
+              <h3 id="drawerTitle">V1 产物全文</h3>
+              <button class="nks-btn small" data-close="1" type="button">关闭</button>
+            </header>
+            <div class="wb-drawer-body" id="drawerBody"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右：企业记忆 + 红线 -->
+      <aside class="wb-context">
+        <div class="wb-card">
+          <div class="wb-card-head">
+            <h2>企业记忆</h2>
+            <span class="nks-tag" id="memoryCount">已读取 6 条</span>
+          </div>
+          <ul class="wb-mem-list" id="memoryList">
+            <li>企业身份证</li>
+            <li>市场部品牌语气</li>
+            <li>公众号历史 32 篇</li>
+            <li>术语表</li>
+            <li>红线规则</li>
+            <li>平台样例</li>
+          </ul>
+        </div>
+        <div class="wb-card wb-redline">
+          <div class="wb-card-head">
+            <h2>不会越过的边界</h2>
+            <span class="nks-tag danger">红线</span>
+          </div>
+          <ul class="wb-redline-list" id="redlineList">
+            <li>不自动发布，需人工确认</li>
+            <li>不编造技术参数</li>
+            <li>客户案例需脱敏</li>
+          </ul>
+        </div>
+        <div class="wb-card wb-tip-card">
+          <div class="wb-card-head"><h2>这一步会发生什么</h2></div>
+          <p class="muted" id="tipText" style="font-size:13px;line-height:1.7;">在企业记忆与红线约束下生成 V1 产物。你来人工审改，反馈写入规则库后，V2 会更准、更专业 — 这正是下一步「反馈进化」要演示的事。</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer id="nks-timeline"></footer>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loading-text">小薯正在执行任务…</div>
+    </div>
+  </div>
+
+  <script src="../../assets/llm-config.js"></script>
+  <script src="../../assets/llm.js"></script>
+  <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

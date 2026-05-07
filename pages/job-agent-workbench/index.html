@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · 路由与骨架</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell">
+    <header id="nks-topbar"></header>
+
+    <main class="nks-main">
+      <aside id="nks-sidebar" class="nks-sidebar"></aside>
+
+      <section class="nks-content nks-content-tight">
+        <div class="nks-page-head">
+          <div class="nks-page-title">
+            <p class="top-breadcrumb">当前位置：路由与骨架</p>
+            <h1>系统已完成需求路由判断，并生成岗位骨架</h1>
+          </div>
+        </div>
+
+        <nav class="nks-flow-strip" aria-label="主流程">
+          <a href="../demand-diagnosis/index.html">← 需求诊断</a>
+          <span class="muted">七层骨架 · 可再次调用模型刷新</span>
+          <a href="../job-agent-workbench-prototype/index.html">进入操作台 →</a>
+        </nav>
+
+        <div class="workbench-layout">
+          <section class="nks-card demand-source-card demand-chat-card nks-fade-up">
+            <div class="demand-source-head">
+              <div>
+                <p class="eyebrow">Talk To The Model</p>
+                <h2>把岗位需求和资料交给大模型识别</h2>
+              </div>
+              <span class="nks-tag success" id="recognition-status">待识别</span>
+            </div>
+            <div class="llm-dialogue">
+              <div class="dialogue-avatar">AI</div>
+              <div class="dialogue-bubble">
+                直接粘贴会议纪要、领导一句话、表格说明，或上传公司介绍 / PPT / 表格 / 截图。我会先识别需求，再把七层岗位骨架补满。
+              </div>
+            </div>
+            <textarea class="demand-chat-input" id="raw-demand-input" rows="5" placeholder="例如：市场部内容生产太慢，英文技术资料要改成公众号、知乎、LinkedIn、小红书等 10 个平台，每个平台风格不一样……"></textarea>
+            <div class="upload-row">
+              <label class="nks-btn upload-btn" for="material-upload">上传资料</label>
+              <input id="material-upload" type="file" multiple hidden />
+              <button class="nks-btn" id="fill-demo-demand" type="button">填入 Demo 需求</button>
+              <button class="nks-btn primary" id="recognize-demand" type="button">识别并填满七层骨架 →</button>
+            </div>
+            <div class="material-list" id="material-list"></div>
+            <p class="muted recognition-hint" id="recognition-hint">识别完成后，下方七层骨架会按“岗位边界 / 工作顺序 / 质量标准 / 红线 / 交付契约 / 工具目录 / 学习回路”自动填充。</p>
+          </section>
+
+          <section class="nks-card skeleton-section skeleton-spotlight nks-fade-up">
+            <div class="section-headline">
+              <div>
+                <p class="eyebrow">Seven-layer Work Skeleton</p>
+                <h2 id="skeleton-title"></h2>
+              </div>
+              <span class="nks-tag">岗位 Agent 能力边界定义</span>
+            </div>
+            <div class="skeleton-layout">
+              <div class="skeleton-list" id="skeleton-list"></div>
+              <div class="reference-panel" id="reference-panel"></div>
+            </div>
+          </section>
+
+          <section class="nks-card conclusion-section nks-fade-up">
+            <div class="conclusion-header">
+              <div class="conclusion-badge">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
+              </div>
+              <div>
+                <div class="conclusion-title">系统判断结论</div>
+                <div class="conclusion-subtitle">职位：<span id="job-position"></span></div>
+              </div>
+            </div>
+            <div class="conclusion-reason" id="judgement-reason"></div>
+            <div class="confidence-tag" id="confidence-tag"></div>
+            <div class="metric-strip" id="metric-strip"></div>
+          </section>
+
+          <section class="nks-card comparison-section nks-fade-up delay-2">
+            <h2>路由方案对比</h2>
+            <div class="comparison-grid" id="comparison-grid"></div>
+          </section>
+
+          <div class="bottom-bar">
+            <div class="bottom-hint" id="bottom-hint"></div>
+            <div class="nks-actions" style="margin-top: 0;">
+              <button class="nks-btn secondary" id="back-modify" type="button">返回修改需求</button>
+              <button class="nks-btn primary" id="enter-workbench" type="button">确认并进入员工诞生卡</button>
+            </div>
+          </div>
+          <div class="status-line nks-small" id="page-status"></div>
+        </div>
+      </section>
+
+      <aside class="nks-rail nks-fade-up delay-2">
+        <div class="nks-card">
+          <h2>当前进度</h2>
+          <div class="ctx-row"><span class="label">步骤</span><span class="value">七层骨架</span></div>
+          <div class="ctx-row"><span class="label">企业</span><span class="value" id="rail-company">—</span></div>
+        </div>
+        <div class="nks-card">
+          <h2>路由摘要</h2>
+          <div class="context-list" id="context-list"></div>
+          <p class="nks-muted" style="font-size:12px;margin-top:var(--sp-2);" id="context-hint"></p>
+        </div>
+        <a class="nks-btn primary block" href="../agent-birth-card/index.html" style="text-align:center;">跳过 · 直接看诞生卡</a>
+      </aside>
+    </main>
+
+    <footer id="nks-timeline"></footer>
+  </div>
+
+    <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="../../assets/llm.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+.memory-layout {
+      display: grid;
+      gap: var(--sp-4);
+    }
+
+    .top-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-2);
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--primary-soft);
+    }
+
+    .top-notice-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .top-notice-content {
+      flex: 1;
+    }
+
+    .top-notice-title {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: var(--sp-1);
+    }
+
+    .top-notice-list {
+      display: flex;
+      gap: var(--sp-4);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .top-notice-list span::before {
+      content: "·";
+      margin-right: var(--sp-1);
+      color: var(--muted);
+    }
+
+    .identity-library-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--sp-4);
+      align-items: start;
+    }
+
+    .identity-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-3);
+    }
+
+    .identity-card-header h2 {
+      margin-bottom: 0;
+    }
+
+    .identity-fields {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .identity-field {
+      display: grid;
+      gap: var(--sp-1);
+      padding: var(--sp-2) 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .identity-field:last-child {
+      border-bottom: 0;
+    }
+
+    .field-label {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field-value {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .field-value.risk {
+      color: var(--danger);
+      background: var(--danger-soft);
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: var(--radius-sm);
+    }
+
+    .library-panel {
+      display: grid;
+      gap: var(--sp-3);
+    }
+
+    .library-tabs {
+      display: inline-flex;
+      gap: var(--sp-1);
+      padding: var(--sp-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+    }
+
+    .library-tab {
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: var(--sp-1) var(--sp-3);
+      color: var(--muted);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .library-tab.active {
+      color: var(--primary);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .upload-zone {
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      padding: var(--sp-4);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .upload-icon {
+      width: 40px;
+      height: 40px;
+      color: var(--primary);
+    }
+
+    .upload-title {
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .upload-formats {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .upload-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      justify-content: center;
+    }
+
+    .upload-limit {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .demand-section {
+      display: grid;
+      gap: var(--sp-3);
+    }
+
+    .demand-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--sp-4);
+    }
+
+    .demand-panel {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .demand-label {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-1);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .demand-label svg {
+      width: 16px;
+      height: 16px;
+      color: var(--primary);
+    }
+
+    .demand-hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: var(--sp-2);
+    }
+
+    .demand-example {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      padding: var(--sp-2) var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+    }
+
+    .char-row {
+      display: flex;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      padding: var(--sp-3) 0;
+    }
+
+    .bottom-hint {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bottom-hint svg {
+      width: 16px;
+      height: 16px;
+      color: var(--success);
+    }
+
+    .status-line {
+      min-height: 24px;
+    }
+
+    .context-card {
+      position: sticky;
+      top: var(--sp-4);
+      display: grid;
+      gap: var(--sp-3);
+    }
+
+    .context-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+    }
+
+    .context-list {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .context-item {
+      display: grid;
+      gap: var(--sp-1);
+      padding: var(--sp-2) var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+
+    .context-item-label {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .context-item-value {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .context-hint {
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--primary-soft);
+    }
+
+    .context-hint p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1100px) {
+      .identity-library-grid,
+      .demand-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .context-card {
+        position: static;
+      }
+    }

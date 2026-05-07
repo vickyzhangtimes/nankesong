@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentry · 需求诊断与编制判断</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell" id="app">
+    <main class="diagnosis-main">
+      <aside class="nks-card flat">
+        <div class="nks-stepnav">
+          <div class="item">
+            <span class="n">1</span>
+            <div>
+              <div class="title">企业资料</div>
+              <div class="sub">企业与部门资料已接入</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">2</span>
+            <div>
+              <div class="title">岗位需求</div>
+              <div class="sub">读取混乱需求材料</div>
+            </div>
+          </div>
+          <div class="item active">
+            <span class="n">3</span>
+            <div>
+              <div class="title">需求诊断</div>
+              <div class="sub">判断复用、加流程或新建</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">4</span>
+            <div>
+              <div class="title">员工入职</div>
+              <div class="sub">生成可确认的 AI 员工卡</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="stack">
+        <div class="page-head">
+          <div>
+            <h1>需求诊断与编制判断</h1>
+            <p>先判断这个需求应该交给谁，再决定是复用已有 Agent、加一个 workflow，还是新建岗位 Agent。</p>
+          </div>
+          <div class="head-actions">
+            <button class="nks-btn" id="rerunBtn" type="button" hidden>重新诊断</button>
+          </div>
+        </div>
+
+        <article class="nks-card nks-fade-up" id="inputState" style="padding:24px;">
+          <div class="section-title" style="margin-bottom:12px;">
+            <div>
+              <h2 style="margin:0;">贴一段岗位需求</h2>
+              <p class="muted" style="font-size:13px;margin-top:4px;">会议纪要、领导一句话、白板照片都可以。系统会自动诊断、做岗位匹配。</p>
+            </div>
+          </div>
+          <textarea id="diagInput" class="nks-textarea" maxlength="3000" rows="6"
+            style="width:100%;min-height:140px;padding:14px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);font-size:14px;line-height:1.7;resize:vertical;"
+            placeholder="例如：市场部内容生产太慢。英文技术资料要翻译并改成公众号、知乎、LinkedIn、小红书等 10 个平台的内容…"></textarea>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="nks-btn" id="useDemoBtn" type="button">📋 用 Demo 数据</button>
+              <button class="nks-btn" id="uploadDemoBtn" type="button" disabled style="opacity:.6;">📎 上传文件</button>
+            </div>
+            <button class="nks-btn primary lg" id="startDiagnosisBtn" type="button" style="min-width:200px;">
+              <span id="startDiagnosisText">开始诊断 →</span>
+            </button>
+          </div>
+        </article>
+
+        <div id="diagResults" hidden>
+          <article class="nks-card demand-card nks-fade-up" id="demandCard" data-collapsed="true">
+            <div class="section-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;" id="demandToggle">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--ok,#16a34a);color:#fff;align-items:center;justify-content:center;font-size:14px;">✓</span>
+                <h2 style="margin:0;font-size:15px;">已读取你的需求材料</h2>
+                <span class="nks-tag muted" id="demandSourceCount">—</span>
+              </div>
+              <span class="muted" id="demandToggleHint" style="font-size:12px;">点击查看原文 ▾</span>
+            </div>
+            <div class="demand-detail" id="demandDetail" hidden style="margin-top:12px;display:grid;gap:12px;">
+              <div>
+                <div class="section-title" style="margin-bottom:6px;"><span id="demandTitle" style="font-size:13px;color:var(--muted);"></span></div>
+                <div class="quote-box" id="demandExcerpt"></div>
+              </div>
+              <div>
+                <div class="section-title" style="margin-bottom:6px;"><b style="font-size:13px;">已读取来源</b></div>
+                <div class="source-list" id="sourceList"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="route-hero nks-fade-up delay-1" id="routeHero">
+            <div class="route-banner">
+              <div>
+                <small>Routing Decision</small>
+                <h2 id="decisionHeadline">正在生成判断</h2>
+              </div>
+              <span class="status-pill" id="statusPill">可确认</span>
+            </div>
+            <div class="route-body">
+              <div class="reason-card">
+                <div class="section-title">
+                  <h2>系统判断</h2>
+                  <span class="nks-tag" id="decisionTag">—</span>
+                </div>
+                <div class="decision-list" id="decisionList"></div>
+              </div>
+              <div class="reason-card">
+                <div class="section-title">
+                  <h2>下一步会生成什么</h2>
+                </div>
+                <p id="nextStepText" class="muted"></p>
+                <div class="loading-row" id="loadingRow">
+                  <span class="spinner"></span>
+                  <span>调用诊断节点中，失败会自动回退演示数据</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="nks-card nks-fade-up delay-2">
+            <div class="section-title">
+              <div>
+                <h2>价值指标</h2>
+                <p class="muted">这里只放能被业务复核的代理指标，不放虚的"专业度百分比"。</p>
+              </div>
+            </div>
+            <div class="metric-grid" id="metricGrid"></div>
+          </article>
+
+          <article class="nks-card nks-fade-up delay-3" hidden>
+            <div class="skeleton-grid" id="skeletonGrid" hidden></div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="side-stack">
+        <div class="nks-card" id="routerScanCard" hidden>
+          <div class="section-title">
+            <h2>系统正在做岗位匹配</h2>
+            <span class="nks-tag" id="routerScanStatus">扫描中</span>
+          </div>
+          <p class="muted" id="routerScanHint" style="font-size:12px;margin:4px 0 12px;">在企业现有 AI 员工中查找谁能接这个需求……</p>
+          <div class="roster-mini" id="rosterMini"></div>
+          <div class="router-result" id="routerResult" hidden style="margin-top:12px;padding:10px 12px;border:1px dashed var(--ok,#16a34a);border-radius:8px;background:rgba(22,163,74,.06);font-size:13px;line-height:1.6;"></div>
+        </div>
+
+        <div class="nks-card">
+          <div class="section-title">
+            <h2>企业记忆读取</h2>
+            <span class="nks-tag success" id="memoryCount">—</span>
+          </div>
+          <div class="memory-line" id="memoryLine"></div>
+        </div>
+
+        <div class="nks-card" id="sideHintCard">
+          <div class="section-title">
+            <h2 id="sideHintTitle">这一步会发生什么</h2>
+          </div>
+          <p class="muted" id="sideHintText" style="font-size:13px;line-height:1.7;">点开始诊断后，系统会先理解需求、再扫描现有 AI 员工，最后给出复用 / 新增 workflow / 新建员工三选一的路由判断。</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="bottom-confirm" id="bottomConfirm" hidden>
+      <div>
+        <h3 id="bottomTitle">确认后进入路由与骨架工作台</h3>
+        <p id="bottomHint">下一步会带着本页诊断结果进入工作台，确认岗位骨架后再生成员工卡。</p>
+      </div>
+      <div class="footer-actions">
+        <a class="nks-btn" href="../enterprise-memory/index.html">← 企业记忆</a>
+        <a class="nks-btn" href="../product-demo-hub/index.html">工作台首页</a>
+        <button class="nks-btn primary lg" id="confirmBtn" type="button">确认并生成员工卡 →</button>
+      </div>
+    </footer>
+  </div>
+
+    <script src="../../assets/llm-config.js"></script>
+  <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="../../assets/llm.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

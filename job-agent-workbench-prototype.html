@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · 路由与骨架</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <style>
+    .page-section { margin-bottom: var(--sp-4); }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-3); }
+    .section-title { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-h2); font-weight: 600; color: var(--ink); }
+
+    /* 需求输入区 */
+    .demand-input-wrapper { position: relative; }
+    .demand-input-wrapper .char-count { position: absolute; bottom: var(--sp-2); right: var(--sp-2); font-size: 13px; color: var(--muted); }
+    .input-actions { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+    .upload-btn {
+      display: flex; align-items: center; gap: var(--sp-1);
+      padding: var(--sp-2) var(--sp-3); border: 1px dashed var(--line);
+      border-radius: var(--radius-md); background: transparent; color: var(--muted);
+      font-size: var(--fs-body); cursor: pointer; transition: all .2s ease;
+    }
+    .upload-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
+    /* 路由决策区 */
+    .route-section { display: flex; flex-direction: column; gap: var(--sp-3); }
+    .route-main-card {
+      background: linear-gradient(135deg, var(--primary-soft) 0%, #f0f5ff 100%);
+      border: 1px solid var(--primary); border-radius: var(--radius-lg); padding: var(--sp-4);
+    }
+    .route-main-card .route-badge {
+      display: inline-flex; align-items: center; gap: var(--sp-1);
+      padding: 4px 12px; background: var(--primary); color: white;
+      border-radius: var(--radius-pill); font-size: 12px; font-weight: 500; margin-bottom: var(--sp-2);
+    }
+    .route-main-card .route-agent-name { font-size: var(--fs-h1); font-weight: 700; color: var(--ink); margin-bottom: var(--sp-1); }
+    .route-main-card .route-handling { font-size: var(--fs-h3); color: var(--text); margin-bottom: var(--sp-2); }
+    .route-reason {
+      font-size: var(--fs-body); color: var(--muted); padding: var(--sp-2);
+      background: rgba(255,255,255,.6); border-radius: var(--radius-md); margin-top: var(--sp-2);
+    }
+    .route-sub-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); }
+    .route-sub-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--sp-3); }
+    .route-sub-card .sub-card-label { font-size: 13px; color: var(--muted); margin-bottom: var(--sp-1); }
+    .route-sub-card .sub-card-value { font-size: var(--fs-body); color: var(--ink); font-weight: 500; }
+    .route-sub-card .sub-card-value.empty { color: var(--muted); font-style: italic; }
+    .route-existing {
+      display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2);
+      background: rgba(34,183,122,.08); border-radius: var(--radius-md); border: 1px solid var(--success);
+    }
+    .route-existing .avatar-sm {
+      width: 32px; height: 32px; border-radius: var(--radius-pill);
+      background: var(--success); color: white; display: flex; align-items: center;
+      justify-content: center; font-size: var(--fs-body); font-weight: 600;
+    }
+
+    /* 诊断指标 */
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+    .metric-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
+      padding: var(--sp-3); text-align: center; transition: all .2s ease;
+    }
+    .metric-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
+    .metric-card.empty { color: var(--muted); }
+    .metric-icon-wrapper {
+      width: 48px; height: 48px; margin: 0 auto var(--sp-1); border-radius: var(--radius-md);
+      background: var(--primary-soft); display: flex; align-items: center; justify-content: center; color: var(--primary);
+    }
+    .metric-value { font-size: var(--fs-h1); font-weight: 700; color: var(--ink); line-height: 1.2; }
+    .metric-card.empty .metric-value { font-size: var(--fs-body); font-weight: 400; color: var(--muted); }
+    .metric-label { font-size: 13px; color: var(--muted); margin-top: var(--sp-1); }
+
+    /* 自动化/人工区分 */
+    .automation-split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+    .split-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--sp-3); }
+    .split-card.success { border-color: var(--success); background: rgba(34,183,122,.04); }
+    .split-card.danger  { border-color: var(--danger);  background: rgba(217,72,72,.04); }
+    .split-card-header { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2); }
+    .split-card-header .icon-circle {
+      width: 28px; height: 28px; border-radius: var(--radius-pill);
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .split-card.success .icon-circle { background: rgba(34,183,122,.15); color: var(--success); }
+    .split-card.danger  .icon-circle { background: rgba(217,72,72,.15);  color: var(--danger); }
+    .split-card-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
+    .split-list { list-style: none; display: flex; flex-direction: column; gap: var(--sp-1); }
+    .split-list li { font-size: var(--fs-body); color: var(--text); padding-left: var(--sp-3); position: relative; }
+    .split-list li::before { content: '•'; position: absolute; left: 0; color: var(--muted); }
+    .split-card.success .split-list li::before { color: var(--success); }
+    .split-card.danger  .split-list li::before { color: var(--danger); }
+
+    /* 七层骨架 */
+    .skeleton-section { background: var(--bg); border-radius: var(--radius-lg); padding: var(--sp-4); margin-top: var(--sp-3); }
+    .skeleton-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+    .skeleton-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
+      padding: var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-2); transition: all .2s ease;
+    }
+    .skeleton-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .skeleton-card.layer-5, .skeleton-card.layer-7 { grid-column: span 2; }
+    .skeleton-card-header { display: flex; align-items: flex-start; gap: var(--sp-2); }
+    .skeleton-icon-wrapper {
+      width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--primary-soft);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .skeleton-card.layer-5 .skeleton-icon-wrapper { background: rgba(245,150,50,.12); }
+    .skeleton-card.layer-7 .skeleton-icon-wrapper { background: rgba(34,183,122,.12); }
+    .skeleton-icon-wrapper svg { color: var(--primary); }
+    .skeleton-card.layer-5 .skeleton-icon-wrapper svg { color: #f59632; }
+    .skeleton-card.layer-7 .skeleton-icon-wrapper svg { color: var(--success); }
+    .skeleton-layer-num { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .skeleton-title { font-size: var(--fs-h3); font-weight: 600; color: var(--ink); }
+    .skeleton-desc { font-size: 13px; color: var(--muted); line-height: var(--lh-normal); }
+    .main-action { margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--line); }
+
+    /* Loading */
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(245,248,254,.95);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .3s ease;
+    }
+    .loading-overlay.active { opacity: 1; pointer-events: all; }
+    .loading-spinner {
+      width: 48px; height: 48px; border: 3px solid var(--line); border-top-color: var(--primary);
+      border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { margin-top: var(--sp-3); font-size: var(--fs-body); color: var(--muted); }
+
+    /* 上下文面板 */
+    .context-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--sp-3); }
+    .context-panel h3 { font-size: var(--fs-body); font-weight: 600; color: var(--ink); margin-bottom: var(--sp-2); display: flex; align-items: center; gap: var(--sp-1); }
+    .ctx-item { padding: var(--sp-2) 0; border-bottom: 1px solid var(--line); }
+    .ctx-item:last-child { border-bottom: none; }
+    .ctx-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    .ctx-value { font-size: var(--fs-body); color: var(--ink); }
+    .ctx-value.empty { color: var(--muted); font-style: italic; }
+
+    /* 工具类 */
+    .mt-3 { margin-top: var(--sp-3); } .mt-4 { margin-top: var(--sp-4); }
+    .flex { display: flex; } .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; } .gap-2 { gap: var(--sp-2); }
+    .block { display: block; width: 100%; } .mb-1 { margin-bottom: 4px; }
+
+    /* ── SVG 图标约束（tokens.css 未定义） ── */
+    .icon-svg {
+      width: 18px; height: 18px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .icon-svg.sm { width: 14px; height: 14px; }
+    .icon-svg.lg { width: 22px; height: 22px; }
+
+    @media(max-width:900px){
+      .nks-main>aside{display:none}
+      .skeleton-grid{grid-template-columns:repeat(2,1fr)}
+      .skeleton-card.layer-5,.skeleton-card.layer-7{grid-column:span 1}
+      .metrics-grid{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div class="nks-shell">
+    <main class="nks-main">
+      <!-- 左侧步骤导航 -->
+      <aside class="nks-card flat" style="padding:var(--sp-3);">
+        <div class="nks-stepnav">
+          <div class="item"><span class="n">1</span><div><div class="title">认知与空间</div><div class="sub">创建企业空间</div></div></div>
+          <div class="item"><span class="n">2</span><div><div class="title">企业记忆</div><div class="sub">建立知识库</div></div></div>
+          <div class="item active"><span class="n">3</span><div><div class="title">路由与骨架</div><div class="sub">岗位诊断</div></div></div>
+          <div class="item"><span class="n">4</span><div><div class="title">员工诞生</div><div class="sub">Agent 上岗</div></div></div>
+          <div class="item"><span class="n">5</span><div><div class="title">工作台执行</div><div class="sub">任务交付</div></div></div>
+          <div class="item"><span class="n">6</span><div><div class="title">反馈迭代</div><div class="sub">持续进化</div></div></div>
+        </div>
+      </aside>
+
+      <!-- 主内容区 -->
+      <section>
+        <!-- 需求输入 -->
+        <div class="nks-card page-section" id="demand-section">
+          <div class="section-header">
+            <div class="section-title">
+              <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <h2>输入岗位需求</h2>
+            </div>
+          </div>
+          <div class="demand-input-wrapper">
+            <textarea id="demand-input" class="nks-textarea" style="min-height:140px;"
+              placeholder="粘贴会议记录、岗位描述，或直接描述需求…"></textarea>
+            <span class="char-count"><span id="char-count">0</span> 字</span>
+          </div>
+          <div class="input-actions">
+            <button class="upload-btn" onclick="handleFileUpload()">
+              <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              上传材料
+            </button>
+            <button class="upload-btn" onclick="fillDemo()">
+              <svg class="icon-svg sm" viewBox="0 0 24 24"><rect x="9" y="11" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              填入 Demo 需求
+            </button>
+          </div>
+          <button class="nks-btn primary lg block mt-3" id="diagnose-btn" onclick="handleDiagnose()">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            开始诊断
+          </button>
+        </div>
+
+        <!-- 路由决策 -->
+        <div class="nks-card page-section" id="route-section" style="display:none;">
+          <div class="section-header">
+            <div class="section-title">
+              <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="12 6 16 12 12 18 8 12"></polygon></svg>
+              <h2>需求路由判断</h2>
+            </div>
+            <span class="nks-tag primary">智能判断</span>
+          </div>
+          <div class="route-section">
+            <div class="route-main-card nks-fade-up">
+              <span class="route-badge">
+                <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M19 21V5c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v16m14 0H3"></path></svg>
+                归入现有 Agent
+              </span>
+              <div class="route-agent-name" id="route-agent-name">—</div>
+              <div class="route-handling" id="route-handling">—</div>
+              <div class="route-reason" id="route-reason">—</div>
+            </div>
+            <div class="route-sub-cards">
+              <div class="route-sub-card nks-fade-up delay-1">
+                <div class="sub-card-label">企业类型</div>
+                <div class="sub-card-value" id="company-type">—</div>
+              </div>
+              <div class="route-sub-card nks-fade-up delay-2">
+                <div class="sub-card-label">推荐岗位</div>
+                <div class="sub-card-value" id="recommended-role">—</div>
+              </div>
+              <div class="route-sub-card nks-fade-up delay-3">
+                <div class="sub-card-label">痛点类型</div>
+                <div class="sub-card-value" id="pain-type">—</div>
+              </div>
+              <div class="route-sub-card nks-fade-up delay-4" id="existing-agent-card">
+                <div class="sub-card-label">复用已有员工</div>
+                <div class="route-existing" id="existing-agent-box" style="display:none;">
+                  <div class="avatar-sm" id="existing-avatar">员</div>
+                  <div>
+                    <div class="sub-card-value" id="existing-agent-name">—</div>
+                    <div style="font-size:13px;color:var(--muted);" id="existing-agent-meta">—</div>
+                  </div>
+                </div>
+                <div class="sub-card-value empty" id="existing-agent-fallback">暂无复用员工</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 诊断指标 -->
+        <div class="nks-card page-section" id="metrics-section" style="display:none;">
+          <div class="section-header">
+            <div class="section-title">
+              <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <h2>核心指标</h2>
+            </div>
+          </div>
+          <div class="metrics-grid" id="metrics-grid"></div>
+          <div class="automation-split mt-4">
+            <div class="split-card success">
+              <div class="split-card-header">
+                <div class="icon-circle"><svg class="icon-svg sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                <span class="split-card-title">可自动化环节</span>
+              </div>
+              <ul class="split-list" id="automatable-list"></ul>
+            </div>
+            <div class="split-card danger">
+              <div class="split-card-header">
+                <div class="icon-circle"><svg class="icon-svg sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div>
+                <span class="split-card-title">需人工复核</span>
+              </div>
+              <ul class="split-list" id="requires-human-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 七层骨架 -->
+        <div class="nks-card page-section" id="skeleton-section" style="display:none;">
+          <div class="section-header">
+            <div class="section-title">
+              <svg class="icon-svg" viewBox="0 0 24 24"><rect x="15" y="3" width="3" height="18"></rect><rect x="9" y="9" width="3" height="12"></rect><rect x="3" y="15" width="3" height="6"></rect></svg>
+              <h2>七层岗位骨架</h2>
+            </div>
+            <span class="nks-tag">岗位 Agent 能力边界定义</span>
+          </div>
+          <div class="skeleton-section">
+            <div class="skeleton-grid" id="skeleton-grid"></div>
+          </div>
+          <div class="main-action flex justify-between items-center">
+            <div class="flex items-center gap-2" id="memory-pill-container">
+              <div class="nks-memory-pill">—</div>
+            </div>
+            <button class="nks-btn primary lg" onclick="handleConfirm()">
+              <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              确认骨架，生成 Agent
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右侧上下文面板 -->
+      <aside>
+        <div class="context-panel">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            当前上下文
+          </h3>
+          <div class="ctx-item"><div class="ctx-label">当前企业</div><div class="ctx-value empty" id="ctx-company">—</div></div>
+          <div class="ctx-item"><div class="ctx-label">企业行业</div><div class="ctx-value empty" id="ctx-industry">—</div></div>
+          <div class="ctx-item"><div class="ctx-label">已有 Agent</div><div class="ctx-value empty" id="ctx-agents">—</div></div>
+          <div class="ctx-item"><div class="ctx-label">企业记忆</div><div class="ctx-value empty" id="ctx-memory">—</div></div>
+        </div>
+        <div class="nks-card mt-3">
+          <h3 style="font-size:var(--fs-body);font-weight:600;color:var(--ink);margin-bottom:var(--sp-2);">诊断进度</h3>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span style="font-size:13px;color:var(--muted);">需求理解</span>
+              <span style="font-size:13px;" id="progress-demand">0%</span>
+            </div>
+            <div class="nks-progress"><div class="bar" id="progress-bar" style="width:0%;"></div></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loading-text">系统正在分析需求…</div>
+    </div>
+  </div>
+
+  <script src="./assets/llm-config.js"></script>
+  <script src="./assets/llm.js"></script>
+  <script src="./assets/mock-data.js"></script>
+  <script src="./assets/state.js"></script>
+  <script>
+    NKS.mountTopbar({ user: '张小北', tag: '路由与骨架' });
+    NKS.mountTimeline(2);
+
+    let currentData = null;
+
+    /* ── 工具函数 ── */
+    function gd(v, d = '—') {
+      return (v === null || v === undefined || v === '' || (Array.isArray(v) && !v.length)) ? d : v;
+    }
+
+    function getIconSVG(name) {
+      const m = {
+        target:    '<svg class="icon-svg lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="12 6 16 12 12 18 8 12"/></svg>',
+        list:      '<svg class="icon-svg lg" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+        check:     '<svg class="icon-svg lg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+        ban:       '<svg class="icon-svg lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+        handshake: '<svg class="icon-svg lg" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>',
+        wrench:    '<svg class="icon-svg lg" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 00-1.4 0l-8 8A1 1 0 005 16l3 3a1 1 0 001.4 0l8-8a1 1 0 000-1.4l-2.7-3.3zM19 2l-2 2 3 3 2-2a2 2 0 00-3-3z"/></svg>',
+        refresh:   '<svg class="icon-svg lg" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>',
+      };
+      return m[name] || m.target;
+    }
+
+    /* ── 初始化上下文 ── */
+    function initContext() {
+      const data = NKS.getCompanyData();
+      const companyName = gd(data.company?.name || data.enterprise_identity?.enterprise_name);
+      const industry    = gd(data.identity?.industry || data.enterprise_identity?.industry);
+      const rosterLen   = (data.roster || data.employee_roster || []).length;
+      const libCount    = Array.isArray(data.libraries)
+        ? data.libraries.reduce((s, l) => s + (l.items ? l.items.length : 1), 0)
+        : (data.memory_rules ? data.memory_rules.length : 0);
+
+      setText('ctx-company', companyName);
+      setText('ctx-industry', industry);
+      setText('ctx-agents', rosterLen + ' 个');
+      setText('ctx-memory', libCount + ' 条');
+      ['ctx-company','ctx-industry','ctx-agents','ctx-memory'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('empty');
+      });
+
+      // 恢复已存的需求输入
+      const state = NKS.getState();
+      if (state.demand_input) {
+        document.getElementById('demand-input').value = state.demand_input;
+        updateCharCount();
+      }
+    }
+
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+    function updateCharCount() {
+      const v = document.getElementById('demand-input').value;
+      document.getElementById('char-count').textContent = v.length;
+    }
+    function updateProgress(p) {
+      document.getElementById('progress-bar').style.width = p + '%';
+      document.getElementById('progress-demand').textContent = p + '%';
+    }
+
+    /* ── Demo 填充 ── */
+    function fillDemo() {
+      const data = NKS.getCompanyData();
+      const demo = data.demand_input || '我们市场部每周要产大量技术内容，需要发布到公众号、知乎、LinkedIn、小红书四个平台。现在全靠人工改写，效率太低，而且术语不统一、语气不一致。想用 AI 解决。';
+      document.getElementById('demand-input').value = demo;
+      updateCharCount();
+      NKS.setState({ demand_input: demo });
+    }
+
+    /* ── 文件上传（触发文件选择） ── */
+    function handleFileUpload() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.pdf,.doc,.docx,.txt,.md';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (file) {
+          const ta = document.getElementById('demand-input');
+          ta.value += '\n\n[上传文件: ' + file.name + ']';
+          updateCharCount();
+          NKS.setState({ demand_input: ta.value });
+        }
+      };
+      input.click();
+    }
+
+    /* ── 诊断主流程（mock + 可选真实 LLM） ── */
+    async function handleDiagnose() {
+      const demandInput = document.getElementById('demand-input').value.trim();
+      if (!demandInput) { alert('请先输入需求'); return; }
+      NKS.setState({ demand_input: demandInput });
+
+      const loading = document.getElementById('loading');
+      const loadingText = document.getElementById('loading-text');
+      loading.classList.add('active');
+      updateProgress(20);
+      loadingText.textContent = '系统正在分析需求…';
+
+      // 模拟 LLM 诊断延迟（或真实调用后 fallback）
+      await new Promise(r => setTimeout(r, 600));
+      updateProgress(50);
+      loadingText.textContent = '提取七层岗位骨架…';
+      await new Promise(r => setTimeout(r, 500));
+      updateProgress(80);
+
+      // 读取 DEMO_DATA（真实 LLM 路径：NKS_LLM.diagnose 已内置 fallback 逻辑）
+      const data = NKS.getCompanyData();
+      currentData = data;
+
+      updateProgress(100);
+      loading.classList.remove('active');
+
+      // 渲染
+      renderRouteCard(data.route_decision || {});
+      renderMetrics(data.diagnosis || {});
+      renderSkeleton(data.skeleton || []);
+    }
+
+    /* ── 渲染路由卡 ── */
+    function renderRouteCard(route) {
+      setText('route-agent-name', gd(route.recommended_agent));
+      setText('route-handling', route.handling ? '处理方式：' + route.handling : '—');
+      setText('route-reason', gd(route.reason));
+      setText('company-type', gd(route.company_type || (currentData.diagnosis && currentData.diagnosis.company_type)));
+      setText('recommended-role', gd(route.recommended_role || (currentData.diagnosis && currentData.diagnosis.recommended_role)));
+
+      const painTypes = currentData.diagnosis && currentData.diagnosis.pain_type;
+      if (painTypes) {
+        const el = document.getElementById('pain-type');
+        el.innerHTML = String(painTypes).split('+').map(t =>
+          `<span class="nks-tag warn">${t.trim()}</span>`
+        ).join(' ');
+      }
+
+      const existing = route.existing_agent;
+      if (existing) {
+        document.getElementById('existing-agent-box').style.display = 'flex';
+        document.getElementById('existing-agent-fallback').style.display = 'none';
+        const parts = String(existing).split('·');
+        document.getElementById('existing-avatar').textContent = (parts[0] || '员').trim().slice(-1);
+        setText('existing-agent-name', (parts[1] || existing).trim());
+        const roster = currentData.roster || currentData.employee_roster || [];
+        const found = roster.find(e => e.name && String(existing).includes(e.name));
+        setText('existing-agent-meta', found ? `${found.id} · ${found.version || 'v1'}` : '在职中');
+      } else {
+        document.getElementById('existing-agent-box').style.display = 'none';
+        document.getElementById('existing-agent-fallback').style.display = 'block';
+      }
+
+      document.getElementById('route-section').style.display = 'block';
+    }
+
+    /* ── 渲染诊断指标 ── */
+    function renderMetrics(diagnosis) {
+      const metrics   = diagnosis.metrics    || [];
+      const auto      = diagnosis.automatable  || [];
+      const human     = diagnosis.requires_human || [];
+
+      document.getElementById('metrics-grid').innerHTML = metrics.map((m, i) => `
+        <div class="metric-card nks-fade-up" style="animation-delay:${i * .08}s">
+          <div class="metric-icon-wrapper">${getIconSVG(m.icon)}</div>
+          <div class="metric-value">${gd(m.value)}</div>
+          <div class="metric-label">${gd(m.label)}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('automatable-list').innerHTML = auto.map(x => `<li>${x}</li>`).join('');
+      document.getElementById('requires-human-list').innerHTML = human.map(x => `<li>${x}</li>`).join('');
+
+      document.getElementById('metrics-section').style.display = 'block';
+    }
+
+    /* ── 渲染七层骨架 ── */
+    function renderSkeleton(skeleton) {
+      document.getElementById('skeleton-grid').innerHTML = skeleton.map((item, i) => {
+        const layerClass = (item.layer === 5 || item.layer === 7) ? `layer-${item.layer}` : '';
+        return `
+          <div class="skeleton-card nks-fade-up delay-${i + 1} ${layerClass}">
+            <div class="skeleton-card-header">
+              <div class="skeleton-icon-wrapper">${getIconSVG(item.icon)}</div>
+              <div>
+                <div class="skeleton-layer-num">第 ${gd(item.layer, '')} 层</div>
+                <div class="skeleton-title">${gd(item.title)}</div>
+              </div>
+            </div>
+            <div class="skeleton-desc">${gd(item.desc)}</div>
+          </div>
+        `;
+      }).join('');
+
+      const libs = Array.isArray(currentData.libraries)
+        ? currentData.libraries.reduce((s, l) => s + (l.items ? l.items.length : 1), 0)
+        : (currentData.memory_rules ? currentData.memory_rules.length : 0);
+      document.getElementById('memory-pill-container').innerHTML =
+        `<div class="nks-memory-pill">已读取 ${libs} 条企业记忆</div>`;
+
+      document.getElementById('skeleton-section').style.display = 'block';
+    }
+
+    /* ── 确认生成 Agent ── */
+    function handleConfirm() {
+      if (!currentData) { alert('请先完成诊断'); return; }
+      NKS.setState({
+        currentAgent: {
+          skeleton:  currentData.skeleton,
+          diagnosis: currentData.diagnosis,
+          route:     currentData.route_decision,
+        }
+      });
+      location.href = './agent-birth-card.html';
+    }
+
+    /* ── 输入监听 ── */
+    document.getElementById('demand-input').addEventListener('input', function() {
+      updateCharCount();
+      NKS.setState({ demand_input: this.value });
+    });
+
+    /* ── 初始化 ── */
+    initContext();
+  </script>
+</body>
+</html>

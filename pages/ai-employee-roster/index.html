@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 · AI 员工仓库</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+  
+</head>
+<body>
+  <div class="nks-shell">
+    <main class="nks-main">
+      <!-- 左侧步骤导航 -->
+      <aside>
+        <div class="nks-card flat">
+          <nav class="nks-stepnav">
+            <div class="item">
+              <span class="n">1</span>
+              <div><div class="title">认知与空间</div><div class="sub">理解产品，创建企业空间</div></div>
+            </div>
+            <div class="item">
+              <span class="n">2</span>
+              <div><div class="title">企业记忆</div><div class="sub">企业库 / 部门库</div></div>
+            </div>
+            <div class="item">
+              <span class="n">3</span>
+              <div><div class="title">需求诊断</div><div class="sub">识别需求与目标</div></div>
+            </div>
+            <div class="item">
+              <span class="n">4</span>
+              <div><div class="title">路由骨架与生成</div><div class="sub">确认岗位并生成员工</div></div>
+            </div>
+            <div class="item active">
+              <span class="n">5</span>
+              <div><div class="title">员工仓库与执行</div><div class="sub">浏览 · 搜索 · 派任务</div></div>
+            </div>
+            <div class="item">
+              <span class="n">6</span>
+              <div><div class="title">反馈后持续迭代</div><div class="sub">V1 → V2 → 写回记忆</div></div>
+            </div>
+          </nav>
+          <div style="margin-top:var(--sp-3);padding:0 var(--sp-2);">
+            <a href="../agent-birth-card/index.html" class="nks-btn" style="width:100%;justify-content:center;">← 员工诞生</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 主内容：员工网格 -->
+      <section>
+        <div class="roster-page" style="padding:0;">
+          <section class="roster-hero">
+            <div>
+              <div class="title-line">
+                <h1>AI 员工仓库</h1>
+                <span class="nks-tag muted">部门共享 · 权限隔离</span>
+              </div>
+              <p class="hero-sub">按部门和岗位浏览 AI 员工，找到合适的人来接任务。</p>
+            </div>
+            <div class="search-card">
+              <label class="search-box" for="searchInput">
+                <span class="search-mark"></span>
+                <input id="searchInput" type="search" placeholder="搜索员工、岗位或任务" />
+              </label>
+              <div class="sort-switch" aria-label="排序方式">
+                <button class="active" data-sort="hot">最常用</button>
+                <button data-sort="new">最新</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="category-bar">
+            <div id="reuse-banner" class="nks-card" style="display:none;margin-bottom:var(--sp-2);border-color:var(--primary);background:var(--primary-soft);"></div>
+            <nav class="category-tabs" id="categoryTabs" aria-label="部门分类"></nav>
+          </section>
+
+          <section class="summary-strip" id="summaryStrip"></section>
+
+          <section class="grid" id="employeeGrid"></section>
+          <section class="empty" id="emptyState">没有找到匹配的 AI 员工。可以换个关键词，或回到诊断页申请新岗位。</section>
+        </div>
+      </section>
+
+      <!-- 右侧上下文 -->
+      <aside>
+        <div class="nks-card" style="margin-bottom:var(--sp-3);">
+          <h2 style="margin-bottom:var(--sp-2);">当前企业</h2>
+          <div class="ctx-row"><span class="label">企业名称</span><span class="value" id="ctxCompany">—</span></div>
+          <div class="ctx-row"><span class="label">行业</span><span class="value" id="ctxIndustry">—</span></div>
+          <div class="ctx-row"><span class="label">当前步骤</span><span class="value">员工仓库</span></div>
+        </div>
+        <div class="nks-card" style="margin-bottom:var(--sp-3);">
+          <h2 style="margin-bottom:var(--sp-2);">仓库概览</h2>
+          <div class="ctx-row"><span class="label">已启用</span><span class="value" id="ctxActive">—</span></div>
+          <div class="ctx-row"><span class="label">试运行</span><span class="value" id="ctxTrial">—</span></div>
+          <div class="ctx-row"><span class="label">待配置</span><span class="value" id="ctxPending">—</span></div>
+          <div class="ctx-row"><span class="label">累计交办</span><span class="value" id="ctxTasks">—</span></div>
+        </div>
+        <a href="../feedback-evolution/index.html" class="nks-btn primary" style="width:100%;height:48px;font-size:15px;justify-content:center;">
+          进入反馈进化 →
+        </a>
+      </aside>
+    </main>
+  </div>
+
+    <script src="../../assets/llm-config.js"></script>
+  <script src="../../assets/mock-data.js"></script>
+  <script src="../../assets/state.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

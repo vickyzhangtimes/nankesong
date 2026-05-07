@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentry · 需求诊断与编制判断</title>
+  <link rel="stylesheet" href="./assets/tokens.css" />
+  <style>
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .diagnosis-main {
+      width: min(1360px, 100%);
+      margin: 0 auto;
+      padding: var(--sp-4);
+      padding-bottom: 104px;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr) 320px;
+      gap: var(--sp-3);
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-3);
+    }
+
+    .page-head p {
+      margin-top: var(--sp-1);
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .head-actions {
+      display: flex;
+      gap: var(--sp-2);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--sp-3);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-2);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: var(--fs-sm);
+    }
+
+    .demand-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: var(--sp-3);
+      align-items: stretch;
+    }
+
+    .quote-box {
+      min-height: 132px;
+      padding: var(--sp-3);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    .source-list {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .source-item {
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-2);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-size: var(--fs-sm);
+      color: var(--text);
+    }
+
+    .source-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: var(--radius-pill);
+      background: var(--success);
+      flex: 0 0 auto;
+    }
+
+    .route-hero {
+      border: 1px solid var(--primary);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .route-banner {
+      padding: var(--sp-3) var(--sp-4);
+      color: var(--surface);
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+    }
+
+    .route-banner small {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--primary-soft);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .route-banner h2 {
+      color: var(--surface);
+      font-size: 24px;
+    }
+
+    .route-body {
+      padding: var(--sp-4);
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+      gap: var(--sp-3);
+    }
+
+    .reason-card {
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .reason-card strong {
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .decision-list {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .decision-row {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: var(--sp-2);
+      align-items: start;
+      padding: var(--sp-2) 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .decision-row:last-child {
+      border-bottom: 0;
+    }
+
+    .decision-row b {
+      color: var(--ink);
+      font-size: var(--fs-sm);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--sp-2);
+    }
+
+    .metric-card {
+      min-height: 112px;
+      padding: var(--sp-3);
+      display: grid;
+      gap: var(--sp-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .metric-card strong {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .metric-change {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: var(--fs-xs);
+    }
+
+    .metric-change b {
+      color: var(--primary-ink);
+      font-size: 14px;
+    }
+
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sp-2);
+    }
+
+    .skeleton-card {
+      min-height: 132px;
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .skeleton-card.learning {
+      grid-column: span 2;
+      background: var(--primary-soft);
+      border-color: var(--primary);
+    }
+
+    .skeleton-card.redline {
+      background: var(--danger-soft);
+      border-color: var(--danger);
+    }
+
+    .skeleton-card h3 {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-1);
+      margin-bottom: var(--sp-2);
+    }
+
+    .idx {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      display: inline-grid;
+      place-items: center;
+      color: var(--primary-ink);
+      background: var(--primary-soft);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    .redline .idx {
+      color: var(--danger);
+      background: var(--surface);
+    }
+
+    .learning .idx {
+      color: var(--surface);
+      background: var(--primary);
+    }
+
+    .clean-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 7px;
+    }
+
+    .clean-list li {
+      position: relative;
+      padding-left: 18px;
+      color: var(--text);
+      font-size: var(--fs-sm);
+      line-height: 1.45;
+    }
+
+    .clean-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-pill);
+      background: var(--primary);
+    }
+
+    .redline .clean-list li::before {
+      background: var(--danger);
+    }
+
+    .side-stack {
+      position: sticky;
+      top: 88px;
+      display: grid;
+      gap: var(--sp-3);
+      align-self: start;
+    }
+
+    .roster-mini {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .roster-item {
+      padding: var(--sp-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      display: grid;
+      gap: 4px;
+    }
+
+    .roster-item.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .roster-item strong {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .memory-line {
+      display: grid;
+      gap: var(--sp-2);
+    }
+
+    .memory-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+      padding: var(--sp-2);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-size: var(--fs-sm);
+    }
+
+    .bottom-confirm {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      padding: var(--sp-3) var(--sp-4);
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--sp-3);
+    }
+
+    .bottom-confirm p {
+      color: var(--muted);
+      font-size: var(--fs-sm);
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: var(--sp-2);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      background: var(--success-soft);
+      color: var(--success);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .loading-row {
+      display: none;
+      align-items: center;
+      gap: var(--sp-2);
+      color: var(--muted);
+      font-size: var(--fs-sm);
+    }
+
+    .loading .loading-row {
+      display: flex;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-pill);
+      border: 2px solid var(--primary-soft);
+      border-top-color: var(--primary);
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1180px) {
+      .diagnosis-main {
+        grid-template-columns: 1fr;
+      }
+      .side-stack {
+        position: static;
+      }
+      .demand-card,
+      .route-body {
+        grid-template-columns: 1fr;
+      }
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-head,
+      .route-banner,
+      .bottom-confirm {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .metric-grid,
+      .skeleton-grid {
+        grid-template-columns: 1fr;
+      }
+      .skeleton-card.learning {
+        grid-column: span 1;
+      }
+      .footer-actions,
+      .head-actions {
+        justify-content: stretch;
+      }
+      .footer-actions .nks-btn,
+      .head-actions .nks-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nks-shell" id="app">
+    <main class="diagnosis-main">
+      <aside class="nks-card flat">
+        <div class="nks-stepnav">
+          <div class="item">
+            <span class="n">1</span>
+            <div>
+              <div class="title">企业资料</div>
+              <div class="sub">企业与部门资料已接入</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">2</span>
+            <div>
+              <div class="title">岗位需求</div>
+              <div class="sub">读取混乱需求材料</div>
+            </div>
+          </div>
+          <div class="item active">
+            <span class="n">3</span>
+            <div>
+              <div class="title">需求诊断</div>
+              <div class="sub">判断复用、加流程或新建</div>
+            </div>
+          </div>
+          <div class="item">
+            <span class="n">4</span>
+            <div>
+              <div class="title">员工入职</div>
+              <div class="sub">生成可确认的 AI 员工卡</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="stack">
+        <div class="page-head">
+          <div>
+            <h1>需求诊断与编制判断</h1>
+            <p>先判断这个需求应该交给谁，再决定是复用已有 Agent、加一个 workflow，还是新建岗位 Agent。</p>
+          </div>
+          <div class="head-actions">
+            <button class="nks-btn" id="rerunBtn" type="button">重新诊断</button>
+          </div>
+        </div>
+
+        <article class="nks-card demand-card nks-fade-up">
+          <div>
+            <div class="section-title">
+              <h2 id="demandTitle">岗位需求材料</h2>
+              <span class="nks-tag muted">原始输入</span>
+            </div>
+            <div class="quote-box" id="demandExcerpt"></div>
+          </div>
+          <div>
+            <div class="section-title">
+              <h2>已读取</h2>
+            </div>
+            <div class="source-list" id="sourceList"></div>
+          </div>
+        </article>
+
+        <article class="route-hero nks-fade-up delay-1" id="routeHero">
+          <div class="route-banner">
+            <div>
+              <small>Routing Decision</small>
+              <h2 id="decisionHeadline">正在生成判断</h2>
+            </div>
+            <span class="status-pill" id="statusPill">可确认</span>
+          </div>
+          <div class="route-body">
+            <div class="reason-card">
+              <div class="section-title">
+                <h2>系统判断</h2>
+                <span class="nks-tag" id="decisionTag">—</span>
+              </div>
+              <div class="decision-list" id="decisionList"></div>
+            </div>
+            <div class="reason-card">
+              <div class="section-title">
+                <h2>下一步会生成什么</h2>
+              </div>
+              <p id="nextStepText" class="muted"></p>
+              <div class="loading-row" id="loadingRow">
+                <span class="spinner"></span>
+                <span>调用诊断节点中，失败会自动回退演示数据</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="nks-card nks-fade-up delay-2">
+          <div class="section-title">
+            <div>
+              <h2>价值指标</h2>
+              <p class="muted">这里只放能被业务复核的代理指标，不放虚的“专业度百分比”。</p>
+            </div>
+          </div>
+          <div class="metric-grid" id="metricGrid"></div>
+        </article>
+
+        <article class="nks-card nks-fade-up delay-3">
+          <div class="section-title">
+            <div>
+              <h2>七层岗位骨架</h2>
+              <p class="muted">确认后，这七项会进入员工卡和工作台，成为这个 AI 员工的工作说明书。</p>
+            </div>
+          </div>
+          <div class="skeleton-grid" id="skeletonGrid"></div>
+        </article>
+      </section>
+
+      <aside class="side-stack">
+        <div class="nks-card">
+          <div class="section-title">
+            <h2>企业 AI 员工编制</h2>
+            <span class="nks-tag muted">防止泛滥</span>
+          </div>
+          <div class="roster-mini" id="rosterMini"></div>
+        </div>
+
+        <div class="nks-card">
+          <div class="section-title">
+            <h2>企业记忆读取</h2>
+            <span class="nks-tag success" id="memoryCount">—</span>
+          </div>
+          <div class="memory-line" id="memoryLine"></div>
+        </div>
+
+        <div class="nks-card">
+          <div class="section-title">
+            <h2>接到员工卡</h2>
+          </div>
+          <p class="muted">点击确认后，会把本页诊断结果写入全局状态，并带着入职动效进入 AI 员工确认页。</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="bottom-confirm">
+      <div>
+        <h3 id="bottomTitle">确认后进入路由与骨架工作台</h3>
+        <p id="bottomHint">下一步会带着本页诊断结果进入工作台，确认岗位骨架后再生成员工卡。</p>
+      </div>
+      <div class="footer-actions">
+        <a class="nks-btn" href="./product-demo-hub.html">返回首页</a>
+        <button class="nks-btn primary lg" id="confirmBtn" type="button">确认并生成员工卡 →</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./assets/llm-config.js"></script>
+  <script src="./assets/mock-data.js"></script>
+  <script src="./assets/state.js"></script>
+  <script src="./assets/llm.js"></script>
+  <script>
+    NKS.mountTopbar({ user: "张小北", tag: "需求诊断" });
+    NKS.mountTimeline(2);
+
+    (function () {
+      const company = NKS.getCompany();
+      const data = NKS.getCompanyData();
+      let diagnosis = {
+        routing_decision: data.routing_decision,
+        diagnosis_metrics: data.diagnosis_metrics,
+        seven_skeleton: data.seven_skeleton
+      };
+
+      const refs = {
+        app: document.getElementById("app"),
+        demandTitle: document.getElementById("demandTitle"),
+        demandExcerpt: document.getElementById("demandExcerpt"),
+        sourceList: document.getElementById("sourceList"),
+        decisionHeadline: document.getElementById("decisionHeadline"),
+        statusPill: document.getElementById("statusPill"),
+        decisionTag: document.getElementById("decisionTag"),
+        decisionList: document.getElementById("decisionList"),
+        nextStepText: document.getElementById("nextStepText"),
+        metricGrid: document.getElementById("metricGrid"),
+        skeletonGrid: document.getElementById("skeletonGrid"),
+        rosterMini: document.getElementById("rosterMini"),
+        memoryLine: document.getElementById("memoryLine"),
+        memoryCount: document.getElementById("memoryCount"),
+        bottomTitle: document.getElementById("bottomTitle"),
+        bottomHint: document.getElementById("bottomHint"),
+        confirmBtn: document.getElementById("confirmBtn"),
+        rerunBtn: document.getElementById("rerunBtn")
+      };
+
+      function esc(value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function decisionLabel(decision) {
+        return {
+          reuse_agent: "复用已有岗位 Agent",
+          add_workflow: "不新建 Agent，新增 workflow",
+          new_role_agent: "新建岗位 Agent"
+        }[decision] || "待判断";
+      }
+
+      function isTargetRosterItem(item, targetAgent) {
+        if (!targetAgent) return false;
+        const title = String(item.title || "");
+        const compactTitle = title.replace(/专员|助理|Agent|\s/g, "");
+        const compactTarget = String(targetAgent).replace(/专员|助理|Agent|\s/g, "");
+        return compactTarget.includes(compactTitle) || compactTitle.includes(compactTarget);
+      }
+
+      function renderStatic() {
+        refs.demandTitle.textContent = data.raw_demand.title;
+        refs.demandExcerpt.textContent = data.raw_demand.excerpt;
+
+        refs.sourceList.innerHTML = (data.libraries || []).map((lib) => `
+          <div class="source-item">
+            <span class="source-dot"></span>
+            <span><b>${esc(lib.name)}</b> · ${esc(lib.status)} · ${esc(lib.items.length)} 项</span>
+          </div>
+        `).join("");
+
+        refs.rosterMini.innerHTML = (data.roster || []).map((item) => {
+          const active = isTargetRosterItem(item, data.routing_decision && data.routing_decision.target_agent);
+          return `
+            <div class="roster-item ${active ? "active" : ""}">
+              <strong>${esc(item.name)} · ${esc(item.title)}</strong>
+              <span class="muted">${esc(item.department)} · ${esc(item.status)} · 已完成 ${esc(item.tasks_done)} 件</span>
+            </div>
+          `;
+        }).join("");
+
+        const memoryItems = Array.from(new Set(
+          (data.task_v1 && data.task_v1.memory_used)
+            ? data.task_v1.memory_used
+            : (data.libraries || []).map((item) => item.name)
+        )).slice(0, 6);
+
+        refs.memoryCount.textContent = `已读取 ${memoryItems.length} 条`;
+        refs.memoryLine.innerHTML = memoryItems.map((item, index) => `
+          <div class="memory-item">
+            <span>${esc(item)}</span>
+            <span class="nks-tag ${index < 3 ? "success" : "muted"}">${index < 3 ? "已接入" : "可追溯"}</span>
+          </div>
+        `).join("");
+      }
+
+      function renderDiagnosis() {
+        const route = diagnosis.routing_decision || {};
+        const label = decisionLabel(route.decision);
+        refs.decisionHeadline.textContent = label;
+        refs.decisionTag.textContent = route.decision || "fallback";
+        refs.statusPill.textContent = route.decision === "new_role_agent" ? "待确认新岗位" : "可归入编制";
+
+        refs.decisionList.innerHTML = [
+          ["建议归属", route.target_agent || "待补"],
+          ["处理方式", route.action || "待补"],
+          ["判断原因", route.reason || "待补"],
+          ["不新建原因", route.not_create_reason || (route.decision === "new_role_agent" ? "已形成独立岗位职责" : "待补")]
+        ].map(([k, v]) => `
+          <div class="decision-row">
+            <b>${esc(k)}</b>
+            <span>${esc(v)}</span>
+          </div>
+        `).join("");
+
+        const next = route.decision === "new_role_agent"
+          ? `下一步会生成「${route.target_agent || data.agent_birth_card.title}」的入职卡，并把七层骨架写成岗位说明。`
+          : `下一步会更新「${route.target_agent || data.agent_birth_card.title}」的员工卡，把新增 workflow 和学习规则写进去。`;
+        refs.nextStepText.textContent = next;
+
+        refs.bottomTitle.textContent = route.decision === "new_role_agent"
+          ? "确认后生成新的 AI 员工卡"
+          : "确认后更新并生成 AI 员工卡";
+        refs.bottomHint.textContent = route.decision === "new_role_agent"
+          ? "这是一个新岗位，员工卡会继承本页七层骨架和指标。"
+          : "不是每个需求都新建员工；本次会把需求沉淀到现有岗位 Agent 的 workflow。";
+
+        refs.metricGrid.innerHTML = (diagnosis.diagnosis_metrics || []).slice(0, 4).map((metric) => `
+          <div class="metric-card">
+            <strong>${esc(metric.name)}</strong>
+            <div class="metric-change">
+              <span>现状：${esc(metric.baseline)}</span>
+              <b>目标：${esc(metric.target)}</b>
+            </div>
+          </div>
+        `).join("");
+
+        refs.skeletonGrid.innerHTML = (diagnosis.seven_skeleton || []).slice(0, 7).map((item) => {
+          const title = item.title || "";
+          const cls = title.includes("红线") ? "redline" : title.includes("学习") ? "learning" : "";
+          const items = Array.isArray(item.items) ? item.items : [];
+          return `
+            <section class="skeleton-card ${cls}">
+              <h3><span class="idx">${esc(item.idx)}</span>${esc(title)}</h3>
+              <ul class="clean-list">
+                ${items.slice(0, 3).map((text) => `<li>${esc(text)}</li>`).join("")}
+              </ul>
+            </section>
+          `;
+        }).join("");
+      }
+
+      function buildAgentProfile() {
+        const agent = data.agent_birth_card || {};
+        const route = diagnosis.routing_decision || {};
+        const memoryItems = (data.task_v1 && data.task_v1.memory_used)
+          ? data.task_v1.memory_used
+          : (data.libraries || []).map((item) => item.name);
+
+        return {
+          agent_id: agent.employee_id,
+          version: route.decision === "new_role_agent" ? "新岗位待确认" : "新增 workflow 待确认",
+          name: agent.name,
+          role: agent.title,
+          department: agent.department,
+          reports_to: company === "hongke" ? "张经理" : "商品部负责人",
+          status: "待确认",
+          employment_stage: route.decision === "new_role_agent" ? "试用期" : "编制内更新",
+          source_items: ["需求诊断", route.target_agent, route.action, "七层岗位骨架"].filter(Boolean).slice(0, 6),
+          tasks_i_can_do: agent.tasks_i_can_do || [],
+          work_boundaries: agent.red_lines || [],
+          available_resources: Array.from(new Set((data.libraries || []).map((item) => item.name).concat(["当前任务资料"]))).slice(0, 6),
+          learning_items: ["已接入本次需求诊断", "已保存路由判断", "下次优先复用已确认 workflow"],
+          memory_status: {
+            read_count: Math.max(3, memoryItems.length),
+            completion: 82,
+            read_items: memoryItems.slice(0, 6)
+          },
+          routing_decision: route,
+          diagnosis_metrics: diagnosis.diagnosis_metrics,
+          seven_skeleton: diagnosis.seven_skeleton
+        };
+      }
+
+      async function runDiagnosis() {
+        refs.app.classList.add("loading");
+        refs.statusPill.textContent = "诊断中";
+        try {
+          const result = await NKS_LLM.diagnose({
+            company,
+            enterprise_identity: data.enterprise_identity,
+            existing_agents: data.roster,
+            raw_demand: data.raw_demand.excerpt
+          });
+          if (result && result.routing_decision && result.seven_skeleton) {
+            diagnosis = result;
+          }
+        } catch (error) {
+          diagnosis = {
+            routing_decision: data.routing_decision,
+            diagnosis_metrics: data.diagnosis_metrics,
+            seven_skeleton: data.seven_skeleton
+          };
+        } finally {
+          refs.app.classList.remove("loading");
+          renderDiagnosis();
+        }
+      }
+
+      refs.confirmBtn.addEventListener("click", () => {
+        const agentProfile = buildAgentProfile();
+        NKS.setState({
+          demandDiagnosis: diagnosis,
+          routingDecision: diagnosis.routing_decision,
+          diagnosisMetrics: diagnosis.diagnosis_metrics,
+          sevenSkeleton: diagnosis.seven_skeleton,
+          currentAgent: data.agent_birth_card,
+          agentProfile,
+          demandConfirmedAt: new Date().toISOString()
+        });
+        location.href = "./job-agent-workbench-prototype.html";
+      });
+
+      refs.rerunBtn.addEventListener("click", runDiagnosis);
+
+      renderStatic();
+      renderDiagnosis();
+    })();
+  </script>
+</body>
+</html>

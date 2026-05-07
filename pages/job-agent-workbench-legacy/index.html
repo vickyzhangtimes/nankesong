@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>岗位 Agent 工厂 - 原型</title>
+  <link rel="stylesheet" href="../../assets/tokens.css" />
+  <link rel="stylesheet" href="../../assets/shell.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="mark">A</div>
+        <div>
+          岗位 Agent 工厂
+          <div style="font-size:12px;color:var(--muted);font-weight:500;">从说不清需求，到跑得起来的 AI 员工</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="pill"><span class="dot"></span>行业生产力赛道</span>
+        <button class="btn">演示视频</button>
+        <button class="btn primary">提交版本</button>
+      </div>
+    </header>
+
+    <main>
+      <aside class="panel flat">
+        <div class="section">
+          <div class="eyebrow">Step 01 / 企业真实输入</div>
+          <h2>上传一段混乱会议记录</h2>
+          <p style="margin-top:8px;">用户不需要知道要搭什么 Agent，只把企业会议、抱怨、流程材料丢进来。</p>
+          <textarea class="input-box" readonly>市场部现在内容生产太慢。英文技术资料要翻译成本地内容，还要改公众号、知乎、LinkedIn、小红书。每个平台风格都不一样，实习生搬运很累。行业洞察也没人持续做，发布后数据复盘弱。我们担心 AI 写得太营销，也不能乱编技术参数。</textarea>
+          <div class="file-chip">📎 虹科 AI 岗位交流会议逐字稿.docx <span style="margin-left:auto;">已解析</span></div>
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <button class="btn lime">开始诊断</button>
+            <button class="btn">替换材料</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Step 02 / 企业记忆中心</div>
+          <h2>上传、保存、以后还能更新</h2>
+          <p style="margin-top:8px;">企业记忆不是模型微调，而是把企业背景、知识资料、历史风格和反馈规则存成 Agent 每次运行前会读取的上下文。</p>
+          <div class="memory-uploader">
+            <div class="upload-row">
+              <div><strong>企业背景资料</strong><small>公司介绍 / 客户类型 / 行业说明</small></div>
+              <span class="badge">已上传</span>
+            </div>
+            <div class="upload-row">
+              <div><strong>知识与术语资料</strong><small>产品说明 / 术语表 / SOP / 历史文章</small></div>
+              <span class="badge">已上传</span>
+            </div>
+            <div class="upload-row">
+              <div><strong>风格与模板资料</strong><small>公众号样例 / 销售话术 / 交付模板</small></div>
+              <span class="badge">待补充</span>
+            </div>
+          </div>
+          <div class="memory-actions">
+            <button class="btn lime">保存为企业记忆</button>
+            <button class="btn">追加更新记忆</button>
+          </div>
+          <div class="memory-ledger">
+            Memory v1 已保存：企业画像、标题规则、术语规则、历史内容风格已进入下次运行上下文。
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Demo 记忆点</div>
+          <h2>现场必须打出的三下</h2>
+          <div class="moment-list">
+            <div class="moment">
+              <div class="num">1</div>
+              <div><strong>诊断跳转</strong><span>系统直接判断：你需要 ToB 内容增长 Agent。</span></div>
+            </div>
+            <div class="moment">
+              <div class="num">2</div>
+              <div><strong>七层骨架</strong><span>一屏展示合格岗位 Agent 的定义标准。</span></div>
+            </div>
+            <div class="moment">
+              <div class="num">3</div>
+              <div><strong>反馈闭环</strong><span>标题太营销 -> 写入规则 -> 第二次更专业。</span></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel hero-panel" id="diagnosis">
+        <div class="status-bar">
+          <span class="pill"><span class="dot"></span>已生成岗位 Agent</span>
+          <span class="pill">不是 Coze 式功能列表，是岗位工作包</span>
+        </div>
+
+        <div class="diagnosis">
+          <div class="diagnosis-head">
+            <div class="agent-name">
+              <div class="eyebrow">Step 03 / 诊断结果</div>
+              <h1>你需要的是：ToB 内容增长 Agent</h1>
+              <p>系统从会议材料中识别出：这不是单纯营销文案需求，而是一个市场部内容增长岗位的 Agent 化需求。</p>
+              <span class="tag">诊断跳转成功</span>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+              <button class="btn">人工修正</button>
+              <a class="btn lime" href="../agent-birth-card/index.html?birth=1">确认生成 AI 员工</a>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric"><b>7/7</b><span>七层骨架完整</span></div>
+            <div class="metric"><b>6</b><span>可执行步骤</span></div>
+            <div class="metric"><b>3</b><span>人工确认点</span></div>
+          </div>
+
+          <div>
+            <div class="eyebrow">Step 04 / 七层岗位骨架</div>
+            <div class="skeleton-grid">
+              <div class="bone featured">
+                <div class="bone-title"><h3>岗位边界</h3><span class="index">01</span></div>
+                <ul>
+                  <li>负责技术资料内容化、多平台草稿、复盘建议</li>
+                  <li>不负责最终发布、预算决策、技术参数确认</li>
+                </ul>
+              </div>
+              <div class="bone">
+                <div class="bone-title"><h3>工作顺序</h3><span class="index">02</span></div>
+                <ul>
+                  <li>读资料 -> 提取卖点 -> 生成选题</li>
+                  <li>多平台改写 -> 红线检查 -> 反馈学习</li>
+                </ul>
+              </div>
+              <div class="bone">
+                <div class="bone-title"><h3>质量标准</h3><span class="index">03</span></div>
+                <ul>
+                  <li>专业准确，符合 ToB 科技语气</li>
+                  <li>标题克制，内容能被销售和市场复用</li>
+                </ul>
+              </div>
+              <div class="bone featured">
+                <div class="bone-title"><h3>质量红线</h3><span class="index">04</span></div>
+                <ul>
+                  <li>不编造技术参数，不夸大产品能力</li>
+                  <li>不自动发布，不泄露内部资料</li>
+                </ul>
+              </div>
+              <div class="bone">
+                <div class="bone-title"><h3>交付契约</h3><span class="index">05</span></div>
+                <ul>
+                  <li>公众号草稿、知乎技术版、LinkedIn 摘要</li>
+                  <li>小红书短内容、配图 prompt、人工确认清单</li>
+                </ul>
+              </div>
+              <div class="bone">
+                <div class="bone-title"><h3>工具目录</h3><span class="index">06</span></div>
+                <ul>
+                  <li>文档解析、企业知识库、平台改写器</li>
+                  <li>红线检查器、反馈规则写入器</li>
+                </ul>
+              </div>
+              <div class="bone featured" style="grid-column: 1 / -1;">
+                <div class="bone-title"><h3>学习回路</h3><span class="index">07</span></div>
+                <ul>
+                  <li>记录标题偏好、术语保留、平台风格、失败原因</li>
+                  <li>下次运行前读取反馈规则，让第二版明显变好</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-note">
+          这一屏是核心差异：Coze 生成应用结构，我们生成岗位业务结构。七层骨架不是文档装饰，而是工作台的生成依据。
+        </div>
+      </section>
+
+      <aside class="panel" id="workspace">
+        <div class="section">
+          <div class="side-title">
+            <div>
+              <div class="eyebrow">Step 05 / Agent 工作台</div>
+              <h2>执行一次真实内容任务</h2>
+            </div>
+            <span class="pill">运行中</span>
+          </div>
+          <div class="memory-ledger">
+            运行前已读取 6 条企业记忆：企业画像、标题规则、术语规则、历史内容风格、人工确认红线、上次反馈。
+          </div>
+          <div class="asset-list">
+            <div class="asset"><strong>英文技术资料.pdf</strong><span>素材库</span></div>
+            <div class="asset"><strong>虹科术语表.md</strong><span>知识库</span></div>
+            <div class="asset"><strong>历史公众号样例</strong><span>模板库</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Workflow 状态</div>
+          <div class="flow">
+            <div class="step"><div class="check">✓</div><div><strong>读取技术资料</strong><br><small>已提取产品、场景、客户痛点</small></div><span class="pill">完成</span></div>
+            <div class="step"><div class="check">✓</div><div><strong>生成多平台草稿</strong><br><small>公众号 / 知乎 / LinkedIn / 小红书</small></div><span class="pill">完成</span></div>
+            <div class="step"><div class="check">!</div><div><strong>质量红线检查</strong><br><small>3 处技术参数需要人工确认</small></div><span class="pill">待确认</span></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">输出结果</div>
+          <div class="result-tabs">
+            <div class="tab active">公众号</div>
+            <div class="tab">知乎</div>
+            <div class="tab">LinkedIn</div>
+            <div class="tab">小红书</div>
+          </div>
+          <div class="content-card" style="margin-top:10px;">
+            <div class="title">工业传感器在智能制造产线监测中的三类典型应用</div>
+            <p>从设备状态监测、异常预警到质量追溯，工业传感器正在成为制造企业提升生产透明度的重要基础设施。</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">人工确认点</div>
+          <div class="risk-list">
+            <div class="risk">技术参数“响应速度提升 40%”需市场负责人确认来源。</div>
+            <div class="risk">客户案例名称建议脱敏，避免泄露合作信息。</div>
+            <div class="risk">小红书版本需降低口语化，避免过度营销。</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Step 06 / 反馈让第二次更好</div>
+          <div class="compare">
+            <div class="compare-row">
+              <div class="version">
+                <span class="label">第一版</span>
+                <strong>一文看懂工业传感器如何颠覆智能制造</strong>
+                <p style="margin-top:8px;">问题：标题太营销，缺少 ToB 技术可信感。</p>
+              </div>
+              <div class="version after">
+                <span class="label">第二版</span>
+                <strong>工业传感器在智能制造产线监测中的三类典型应用</strong>
+                <p style="margin-top:8px;">改进：更专业，更像行业技术内容。</p>
+              </div>
+            </div>
+            <div class="feedback-box">
+              <strong>反馈规则已写入</strong>
+              <code>{
+  "feedback": "标题太营销，要更专业",
+  "rule_added": "标题避免夸张营销词，优先使用技术场景和业务价值",
+  "next_run": "生成前读取企业标题偏好"
+}</code>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn lime">保存 V2</button>
+              <button class="btn">回滚 V1</button>
+              <button class="btn">导出 Word</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Step 07 / 企业记忆更新</div>
+          <div class="mini-json">enterprise_memory:
+  company_type: "ToB 科技企业"
+  customer: "制造业 / 工业企业"
+  tone: "专业、克制、技术可信"
+  title_rule: "避免颠覆、爆款等夸张营销词"
+  terminology: "核心英文术语优先保留"
+  source_index: ["虹科术语表.md", "历史公众号样例", "英文技术资料.pdf"]
+  memory_version: "Memory v2"
+  next_run: "生成内容前先读取以上企业偏好"</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button class="btn lime">保存 Memory v2</button>
+            <button class="btn">上传新资料</button>
+            <button class="btn">查看历史版本</button>
+          </div>
+          <p style="margin-top:10px;">个性化不是训练模型，而是企业画像、知识库、模板库、长期记忆和反馈规则。企业后续上传新资料或确认新反馈，会追加成新的 Memory 版本。</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>

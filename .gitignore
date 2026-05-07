@@ -1,0 +1,14 @@
+﻿# OS / editor
+.DS_Store
+Thumbs.db
+
+# local browser profile cache
+_screenshots/edge-headless-profile/
+
+# temp
+*.tmp
+__pycache__/
+*.pyc
+
+# 误嵌套的仓库副本
+nankesong-main/
