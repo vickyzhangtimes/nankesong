@@ -7,7 +7,8 @@
 
 ## 入口
 
-- 外网入口：`https://raw.githack.com/vickyzhangtimes/nankesong/opc-online-demo-20260507/index.html`
+- 外网入口：`https://rawcdn.githack.com/vickyzhangtimes/nankesong/873d4e6/index.html`
+- 分支预览：`https://raw.githack.com/vickyzhangtimes/nankesong/opc-online-demo-20260507/index.html`
 - GitHub 分支：`https://github.com/vickyzhangtimes/nankesong/tree/opc-online-demo-20260507`
 - 本地入口：`index.html`
 - 原型来源：`../prototype/interactive-roadshow.html`
@@ -18,7 +19,7 @@
 
 ## 推荐发布方式
 
-1. 优先：推送到 GitHub 展示分支，使用静态预览链接。
+1. 优先：推送到 GitHub 展示分支，使用静态预览链接；对外提交时优先使用 commit 固定链接。
 2. 备选：将本目录拖入 Netlify Drop，生成临时 `netlify.app` 链接。
 3. 兜底：保留本目录 zip 包，必要时现场本地打开。
 
