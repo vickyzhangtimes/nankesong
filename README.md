@@ -1,4 +1,4 @@
-> 状态：待上线
+> 状态：已上线
 > 受众：公开展示 / OPC 项目大会
 > 负责人：Codex
 > 更新：2026-05-07
@@ -7,6 +7,8 @@
 
 ## 入口
 
+- 外网入口：`https://raw.githack.com/vickyzhangtimes/nankesong/opc-online-demo-20260507/index.html`
+- GitHub 分支：`https://github.com/vickyzhangtimes/nankesong/tree/opc-online-demo-20260507`
 - 本地入口：`index.html`
 - 原型来源：`../prototype/interactive-roadshow.html`
 
